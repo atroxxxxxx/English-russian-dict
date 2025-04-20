@@ -35,9 +35,9 @@ jobs:
 
       # 5) Собираем цели tests и run
       - name: Build targets
-        run: cmake --build ${{ env.BUILD_DIR }} \
-             --target test_exec --target run -- -j$(nproc)
-
+        run: |
+          cmake --build build --target test_exec -- -j$(nproc)
+          cmake --build build --target run -- -j$(nproc)
       # 6) Запускаем unit‑тесты (tests) через CTest
       - name: Run unit tests
         run: |
