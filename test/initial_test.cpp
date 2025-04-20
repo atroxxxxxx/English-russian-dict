@@ -3,5 +3,5 @@
 
 TEST(init, init_out)
 {
-	EXPECT_STREQ(init::initialString(), "fail");
+	EXPECT_STREQ(init::initialString(), "initial test");
 }
