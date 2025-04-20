@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "../src/initial_test.hpp"
+#include <initial_test.hpp>
 
-TEST(init, init_out)
+TEST(init, out)
 {
 	EXPECT_STREQ(init::initialString(), "initial test");
 }
