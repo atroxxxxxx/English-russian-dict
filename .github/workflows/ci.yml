@@ -45,7 +45,6 @@ jobs:
           ./${{ env.BUILD_DIR }}/run < .github-tests/input1.txt > out1.txt
           diff -u .github-tests/expected1.txt out1.txt
 
-      # 8) Проверяем бинарь run — case 2
       # - name: Run 'run' — case 2
         # run: |
           # ./${{ env.BUILD_DIR }}/run < test/ci/input2.txt > out2.txt
