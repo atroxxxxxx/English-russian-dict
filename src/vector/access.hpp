@@ -1,7 +1,7 @@
 #ifndef VECTOR_ACCESS_HPP
 #define VECTOR_ACCESS_HPP
 
-#include <vector/declaration.hpp>
+#include "declaration.hpp"
 #include <stdexcept>
 
 template< class T, class Allocator >

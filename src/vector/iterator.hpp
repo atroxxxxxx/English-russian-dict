@@ -41,7 +41,7 @@ namespace src
 			}
 			VectorIterator& operator+=(difference_type shift) noexcept
 			{
-				data_ += (isReversed ? shift : -shift);
+				data_ += (isReversed ? -shift : shift);
 				return *this;
 			}
 			VectorIterator& operator-=(difference_type shift) noexcept

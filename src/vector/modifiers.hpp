@@ -1,7 +1,7 @@
 #ifndef VECTOR_MODIFIERS_HPP
 #define VECTOR_MODIFIERS_HPP
 
-#include <vector/declaration.hpp>
+#include "declaration.hpp"
 #include <utility>
 #include <memory>
 #include <vector>
@@ -9,15 +9,16 @@
 template< class T, class Allocator >
 void src::Vector< T, Allocator >::reserve(size_type newCapacity)
 {
-	if (newCapacity <= capacity_)
+	if (newCapacity < capacity_)
 	{
 		return;
 	}
 	Vector temp;
 	temp.data_ = std::allocator_traits< allocator >::allocate(allocator_, newCapacity);
+	temp.capacity_ = newCapacity;
 	while (temp.size_ < size_)
 	{
-		emplace_back(std::move_if_noexcept(data_[temp.size_]));
+		temp.emplace_back(std::move_if_noexcept(data_[temp.size_]));
 	}
 	swap(temp);
 }
@@ -85,7 +86,7 @@ template< class T, class Allocator >
 template< class... Args >
 typename src::Vector< T, Allocator >::reference src::Vector< T, Allocator >::emplace(const_iterator it, Args&&... args)
 {
-	size_type index = it.data_ - data_;
+	size_type index = data_ - it.data_;
 	if (std::is_nothrow_move_constructible< value_type >::value || (it == cend()))
 	{
 		if (size_ >= capacity_)
@@ -95,6 +96,8 @@ typename src::Vector< T, Allocator >::reference src::Vector< T, Allocator >::emp
 		if (it == end())
 		{
 			std::allocator_traits< allocator >::construct(allocator_, data_ + size_, std::forward< Args >(args)...);
+			size_++;
+			return data_[size_ - 1];
 		}
 		else
 		{
@@ -121,6 +124,7 @@ typename src::Vector< T, Allocator >::reference src::Vector< T, Allocator >::emp
 			temp.push_back(data_[i]);
 		}
 	}
+	size_++;
 	return data_[index];
 }
 template< class T, class Allocator >
@@ -225,6 +229,12 @@ typename src::Vector< T, Allocator >::iterator
 	size_type deleted = 0;
 	if (std::is_nothrow_move_constructible< value_type >::value || (endIter == cend()))
 	{
+		if (beginIter == cend())
+		{
+			std::allocator_traits< allocator >::destroy(allocator_, data_ + size_ - 1);
+			size_ --;
+			return {data_ + size_ - 1};
+		}
 		for (; beginIter != endIter; ++beginIter, deleted++)
 		{
 			std::allocator_traits< allocator >::destroy(allocator_, beginIter.data_);
@@ -238,6 +248,7 @@ typename src::Vector< T, Allocator >::iterator
 			std::allocator_traits< allocator >::destroy(allocator_, data_ + i);
 		}
 	}
+	size_ -= deleted;
 	return {data_ + index + deleted};
 }
 template< class T, class Allocator >

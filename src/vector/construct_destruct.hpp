@@ -1,7 +1,7 @@
 #ifndef VECTOR_CONSTRUCT_DESTRUCT_HPP
 #define VECTOR_CONSTRUCT_DESTRUCT_HPP
 
-#include <vector/declaration.hpp>
+#include "declaration.hpp"
 #include <utility>
 
 template< class T, class Allocator >

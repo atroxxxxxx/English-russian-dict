@@ -15,6 +15,6 @@ TEST(vector_insert, push_rvalue)
 	vec.push_back(3);
 	vec.push_back(4);
 	ASSERT_TRUE(vec.capacity() >= vec.size());
-	ASSERT_EQ(vec[0], 4);
-	ASSERT_EQ(vec[2], 2);
+	ASSERT_EQ(vec[0], 2);
+	ASSERT_EQ(vec[2], 4);
 }
