@@ -5,6 +5,9 @@
 
 namespace src
 {
+	template< class T, class Alloc >
+	class Vector;
+
 	namespace details
 	{
 		template< class T, bool isConst, bool isReversed >
@@ -14,7 +17,8 @@ namespace src
 			using value_type = T;
 			using difference_type = std::ptrdiff_t;
 			using reference = value_type&;
-			using const_reference = const value_type&;
+			using pointer = value_type*;
+			using iterator_category = std::random_access_iterator_tag;
 
 			VectorIterator() noexcept:
 				data_(nullptr)
@@ -79,21 +83,25 @@ namespace src
 			{
 				return *data_;
 			}
-			const_reference operator*() const noexcept
+			const value_type& operator*() const noexcept
 			{
 				return *data_;
 			}
 			template< bool isConst1 = isConst >
-			std::enable_if_t< !isConst && !isConst1, value_type* > operator->() noexcept
+			std::enable_if_t< !isConst && !isConst1, pointer > operator->() noexcept
 			{
 				return data_;
 			}
-			value_type* operator->() const noexcept
+			const value_type* operator->() const noexcept
 			{
 				return data_;
 			}
 		private:
 			value_type* data_;
+
+			template< class U, class A >
+			friend class src::Vector;
+			friend class VectorIterator< T, true, isReversed >;
 		};
 	}
 }

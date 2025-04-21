@@ -3,9 +3,9 @@
 
 #include <cstddef>
 #include <memory>
-#include <utility>
+#include <initializer_list>
 
-#include <iterator>
+#include <vector/iterator.hpp>
 
 namespace src
 {
@@ -21,16 +21,16 @@ namespace src
 		using pointer = typename std::allocator_traits< allocator >::pointer;
 		using const_pointer = typename std::allocator_traits< allocator >::const_pointer;
 
-		using iterator = std::random_access_iterator_tag;
-		using const_iterator = std::random_access_iterator_tag;
-		using reverse_iterator = std::random_access_iterator_tag;
-		using const_reverse_iterator = std::random_access_iterator_tag;
+		using iterator = details::VectorIterator< value_type, false, false >;
+		using const_iterator = details::VectorIterator< value_type, true, false >;
+		using reverse_iterator = details::VectorIterator< value_type, false, true >;
+		using const_reverse_iterator = details::VectorIterator< value_type, true, true >;
 
 		Vector() noexcept;
 		Vector(const Vector& rhs);
 		Vector(Vector&& rhs) noexcept;
 		Vector(std::initializer_list< value_type > data);
-		Vector(size_type size, const value_type& value);
+		Vector(size_type repetitions, const value_type& value);
 		template< class It >
 		Vector(It beginIter, It endIter);
 		~Vector();
@@ -47,6 +47,12 @@ namespace src
 		bool empty() const noexcept;
 		size_type size() const noexcept;
 		size_type capacity() const noexcept;
+		reference front() noexcept;
+		reference back() noexcept;
+		const_reference front() const noexcept;
+		const_reference back() const noexcept;
+		pointer data() noexcept;
+		const_pointer data() const noexcept;
 
 		iterator begin() noexcept;
 		const_iterator begin() const noexcept;
@@ -63,26 +69,39 @@ namespace src
 		const_reverse_iterator crend() const noexcept;
 
 		void clear();
-		void reserve(size_type size);
-		void resize(size_type size);
-		void resize(size_type size, const value_type& value);
+		void reserve(size_type newCapacity);
+		void resize(size_type newSize);
+		void resize(size_type newSize, const value_type& value);
 		void shrink_to_fit();
 		void swap(Vector& rhs) noexcept;
 
 		template< class... Args >
-		void emplace(const_iterator it, Args&&... args);
+		reference emplace(const_iterator it, Args&&... args);
 		template< class... Args >
-		void emplace_back(Args&&... args);
-		void insert(const value_type& value);
-		void push_back(const value_type& value);
+		reference emplace_back(Args&&... args);
 
-		void errase(const_iterator beginIter, const_iterator endIter);
-		void errase(const_iterator it);
+		iterator insert(const_iterator it, const value_type& value);
+		iterator insert(const_iterator it, value_type&& value);
+		iterator insert(const_iterator it, size_type count, const value_type& value);
+		template< class It >
+		iterator insert(const_iterator it, It beginIter, It endIter);
+		iterator insert(const_iterator it, std::initializer_list< value_type > data);
+
+		void push_back(const value_type& value);
+		void push_back(value_type&& value);
+		void assign(size_type count, const value_type& value);
+		template< class It >
+		void assign(It beginIter, It endIter);
+		void assign(std::initializer_list< value_type > data);
+
+		iterator errase(const_iterator beginIter, const_iterator endIter);
+		iterator errase(const_iterator it);
 		void pop_back();
 	private:
 		pointer data_;
 		size_type capacity_;
 		size_type size_;
+		allocator allocator_;
 	};
 }
 

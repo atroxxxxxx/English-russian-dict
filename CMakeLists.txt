@@ -15,12 +15,12 @@ include_directories(src test)
 
 add_executable(run
 	main.cpp
-	src/initial_test.hpp
 )
 
 add_executable(test_exec
 	test_main.cpp
 	test/initial_test.cpp
+	test/vector_tests.cpp
 )
 target_include_directories(test_exec
 	PRIVATE

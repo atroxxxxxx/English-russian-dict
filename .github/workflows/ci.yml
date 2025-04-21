@@ -14,40 +14,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1) Checkout
       - uses: actions/checkout@v3
 
-      # 2) (Опционально) Устанавливаем конкретную версию CMake
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v1
         with:
           version: '3.23'
 
-      # 3) Устанавливаем компилятор и утилиты
       - name: Install build tools
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential
 
-      # 4) Конфигурируем проект
       - name: Configure CMake
         run: cmake -S . -B ${{ env.BUILD_DIR }}
 
-      # 5) Собираем цели tests и run
       - name: Build targets
         run: |
           cmake --build build --target test_exec -- -j$(nproc)
           cmake --build build --target run -- -j$(nproc)
-      # 6) Запускаем unit‑тесты (tests) через CTest
+
       - name: Run unit tests
         run: |
           cd ${{ env.BUILD_DIR }}
           ctest --output-on-failure
 
-      # 7) Проверяем бинарь run — case 1
+
       - name: Run 'run' — case 1
         run: |
-          # Предполагается, что в repo есть test/ci/input1.txt и test/ci/expected1.txt
           ./${{ env.BUILD_DIR }}/run < .github-tests/input1.txt > out1.txt
           diff -u .github-tests/expected1.txt out1.txt
 
@@ -56,4 +50,3 @@ jobs:
         # run: |
           # ./${{ env.BUILD_DIR }}/run < test/ci/input2.txt > out2.txt
           # diff -u test/ci/expected2.txt out2.txt
-          
