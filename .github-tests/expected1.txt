@@ -1,1 +1,13 @@
-initial test
+Enter HELP to show command list
+Command list:
+"HELP": print command list
+"CREATE_DICT [OPTIONAL[dict_name]]": create a new dictionaty; returns the number of dictionary
+"SELECT [dict_number]": select current dictionary
+"ADD [english_word]: [russian_word...]": insert word\translate to word
+"SEARCH [english_word]": search word and print translations
+"DELETE [english_word]": delete word from dictionary
+"DELETE_TRANSLATE [english_word]: [russian_word...]": delete translation(s) from word
+"DELETE_DICT [dict_number]": delete dictionary
+"EXIT": finish session
+this command don't have arguments
+this command don't have arguments

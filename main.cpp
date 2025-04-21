@@ -10,18 +10,24 @@
 int main()
 {
 	std::string command;
-	std::map< std::string, void(*)(std::istream&) > commands = {
-		{"HELP", src::printHelp}
+	src::Parser parser;
+	std::map< std::string, void(src::Parser::*)() > commands = {
+		{"HELP", &src::Parser::help},
+		{"EXIT", &src::Parser::exit}
 	};
 
-	src::printHelp();
-	while ((std::cin >> command) && !std::cin.eof() && !std::cin.bad())
+	std::cout << "Enter HELP to show command list\n";
+	while (parser.all_ok() && (std::cin >> command) && !std::cin.eof() && !std::cin.bad())
 	{
 		decltype(commands)::iterator iter = commands.find(command);
 		if (iter == commands.end())
 		{
 			std::cerr << "Wrong command\n";
 			continue;
+		}
+		else
+		{
+			(parser.*(iter->second))();
 		}
 	}
 }
