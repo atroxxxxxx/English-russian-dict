@@ -23,7 +23,8 @@ void src::Parser::help()
 void src::Parser::create_dict()
 {
 	std::string name;
-	std::getline(in_, name, '\n');
+	char c = '\0';
+	std::getline(in_ >> std::noskipws >> c >> std::skipws, name, '\n');
 	if (!name.empty())
 	{
 		dictionaries_.emplace_back(name, dictionary());
@@ -32,9 +33,32 @@ void src::Parser::create_dict()
 	}
 	else
 	{
-		dictionaries_.emplace_back("<untiled>", dictionary());
+		dictionaries_.emplace_back("<untitled>", dictionary());
 		out_ << "Created untiled whith number: " << (dictionaries_.size() - 1) << '\n';
 	}
+}
+
+void src::Parser::select()
+{
+	size_t number = 0;
+	if (dictionaries_.empty())
+	{
+		error_ << "There is no dictionaries\n";
+		return;
+	}
+	else if (!(in_ >> number) || !check_trailing())
+	{
+		error_ << "Invalid format\n";
+		return;
+	}
+	else if (number > dictionaries_.size())
+	{
+		error_ << "Dictionary with this number is not found\n";
+		return;
+	}
+	current_ = &dictionaries_[number];
+	out_ << "Selected dictionary number " << number
+	     << (current_->first == "<untitled>" ? " without name" : "with name " + current_->first) << '\n';
 }
 
 void src::Parser::exit()

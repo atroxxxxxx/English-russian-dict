@@ -17,6 +17,7 @@ include_directories(src test)
 add_executable(run
 	main.cpp
 	src/parser/parser.cpp
+	src/parser/format_guard.cpp
 )
 add_executable(test_exec
 	test_main.cpp
