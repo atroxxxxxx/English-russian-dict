@@ -30,10 +30,14 @@ template< class T, class Allocator >
 src::Vector< T, Allocator >::Vector(std::initializer_list< value_type > data):
 	Vector()
 {
-	reserve(data.size());
-	while (size_ < data.size())
+	if (data.size() != 0)
 	{
-		push_back(data[size_]);
+		reserve(data.size());
+		typename std::initializer_list< value_type >::const_iterator current = data.begin();
+		for (; size_ < data.size(); ++current)
+		{
+			push_back(*current);
+		}
 	}
 }
 template< class T, class Allocator >
@@ -53,7 +57,7 @@ src::Vector< T, Allocator >::Vector(It beginIter, It endIter):
 	}
 }
 template< class T, class Allocator >
-src::Vector< T, Allocator >::~Vector()
+src::Vector< T, Allocator >::Vector::~Vector()
 {
 	clear();
 }

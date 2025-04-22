@@ -1,11 +1,17 @@
 #include <gtest/gtest.h>
-#include <vector.hpp>
+#include "vector.hpp"
 
 TEST(vector_construct, default)
 {
 	src::Vector< int > vec;
 	ASSERT_TRUE(vec.empty());
 	ASSERT_EQ(vec.capacity(), 0);
+}
+TEST(vector_construct, initializer_list)
+{
+	src::Vector< int > vec({1, 2, 3});
+	ASSERT_FALSE(vec.empty());
+	ASSERT_EQ(vec.size(), 3);
 }
 
 TEST(vector_insert, push_rvalue)
@@ -17,4 +23,9 @@ TEST(vector_insert, push_rvalue)
 	ASSERT_TRUE(vec.capacity() >= vec.size());
 	ASSERT_EQ(vec[0], 2);
 	ASSERT_EQ(vec[2], 4);
+}
+
+TEST(vector_iterator, begin_end)
+{
+
 }

@@ -104,32 +104,32 @@ typename src::Vector< T, Allocator >::const_reverse_iterator src::Vector< T, All
 template< class T, class Allocator >
 typename src::Vector< T, Allocator >::iterator src::Vector< T, Allocator >::end() noexcept
 {
-	return {};
+	return {data_ + size_};
 }
 template< class T, class Allocator >
 typename src::Vector< T, Allocator >::const_iterator src::Vector< T, Allocator >::end() const noexcept
 {
-	return {};
+	return {data_ + size_};
 }
 template< class T, class Allocator >
 typename src::Vector< T, Allocator >::const_iterator src::Vector< T, Allocator >::cend() const noexcept
 {
-	return {};
+	return {data_ + size_};
 }
 template< class T, class Allocator >
 typename src::Vector< T, Allocator >::reverse_iterator src::Vector< T, Allocator >::rend() noexcept
 {
-	return {};
+	return {data_};
 }
 template< class T, class Allocator >
 typename src::Vector< T, Allocator >::const_reverse_iterator src::Vector< T, Allocator >::rend() const noexcept
 {
-	return {};
+	return {data_};
 }
 template< class T, class Allocator >
 typename src::Vector< T, Allocator >::const_reverse_iterator src::Vector< T, Allocator >::crend() const noexcept
 {
-	return {};
+	return {data_};
 }
 template< class T, class Allocator >
 typename src::Vector< T, Allocator >::pointer src::Vector< T, Allocator >::data() noexcept
