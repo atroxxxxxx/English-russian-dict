@@ -27,7 +27,7 @@ std::istream& src::operator>>(std::istream& in, Demand&& value)
 	}
 
 	char c = '\0';
-	if (!(in >> c) || (c != value.expected))
+	if (!(in >> std::noskipws >> c) || (c != value.expected))
 	{
 		in.setstate(std::ios::failbit);
 	}

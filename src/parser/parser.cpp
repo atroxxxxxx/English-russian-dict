@@ -1,4 +1,7 @@
 #include "../parser.hpp"
+#include "format_guard.hpp"
+
+#include <iterator>
 
 void src::Parser::help()
 {
@@ -23,10 +26,10 @@ void src::Parser::help()
 void src::Parser::create_dict()
 {
 	std::string name;
-	char c = '\0';
-	std::getline(in_ >> std::noskipws >> c >> std::skipws, name, '\n');
-	if (!name.empty())
+	std::getline(in_, name, '\n');
+	if (!in_ || !name.empty())
 	{
+		name.erase(0, 1);
 		dictionaries_.emplace_back(name, dictionary());
 		out_ << "Created \"" << dictionaries_[dictionaries_.size() - 1].first
 		     << "\" whith number: " << (dictionaries_.size() - 1) << '\n';
@@ -46,7 +49,8 @@ void src::Parser::select()
 		error_ << "There is no dictionaries\n";
 		return;
 	}
-	else if (!(in_ >> number) || !check_trailing())
+	char c = '\0';
+	if (!(in_ >> std::noskipws >> c >> number >> std::skipws) || !check_trailing())
 	{
 		error_ << "Invalid format\n";
 		return;
@@ -61,6 +65,87 @@ void src::Parser::select()
 	     << (current_->first == "<untitled>" ? " without name" : "with name " + current_->first) << '\n';
 }
 
+void src::Parser::add()
+{
+	if (!current_)
+	{
+		error_ << "No dictionaries selected\n";
+		return;
+	}
+	std::string word;
+	if (!(in_ >> word) || (word[word.size() - 1] != ':'))
+	{
+		error_ << "English word is not entered\n";
+		return;
+	}
+	word.pop_back();
+	std::vector< std::string > translates;
+	std::string temp;
+	while (in_.peek() != '\n')
+	{
+		in_ >> temp;
+		translates.push_back(temp);
+	}
+	if (translates.empty())
+	{
+		error_ << "There is no translates entered\n";
+		return;
+	}
+	for (const std::string& i: translates)
+	{
+		current_->second[word].insert({i, {}});
+	}
+	out_ << '"' << word << "\" added to the dictionary\n"; // add name to dict
+}
+
+void src::Parser::search()
+{
+	if (!current_ || current_->second.empty())
+	{
+		error_ << "Dictionary is not found\n";
+		return;
+	}
+	std::string word;
+	if (!(in_ >> word) || !check_trailing())
+	{
+		error_ << "Invalid format\n";
+		return;
+	}
+	auto wordIter = current_->second.find(word);
+	if (wordIter == current_->second.end())
+	{
+		error_ << '"' << word << "\" is not found\n";
+		return;
+	}
+	out_ << '"' << word << "\" found\nTranslates:";
+	for (std::pair< std::string, Empty > translate: current_->second[word])
+	{
+		out_ << ' ' << translate.first;
+	}
+	out_ << '\n';
+}
+void src::Parser::delete_word()
+{
+	if (!current_)
+	{
+		error_ << "No dictionaries selected\n";
+		return;
+	}
+	std::string word;
+	if (!(in_ >> word) || !check_trailing())
+	{
+		error_ << "Invalid format\n";
+		return;
+	}
+	auto treeIter = current_->second.find(word);
+	if (treeIter == current_->second.end())
+	{
+		error_ << '"' << word << "\" is not found\n";
+		return;
+	}
+	current_->second.erase(treeIter);
+	out_ << '"' << word << "\" was deleted";
+}
 void src::Parser::exit()
 {
 	if (!check_trailing())

@@ -15,6 +15,9 @@ int main()
 		{"HELP", &src::Parser::help},
 		{"CREATE_DICT", &src::Parser::create_dict},
 		{"SELECT", &src::Parser::select},
+		{"ADD", &src::Parser::add},
+		{"SEARCH", &src::Parser::search},
+		{"DELETE", &src::Parser::delete_word},
 		{"EXIT", &src::Parser::exit}
 	};
 

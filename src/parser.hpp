@@ -28,7 +28,10 @@ namespace src
 
 		bool all_ok();
 	private:
-		using dictionary = std::map< std::string, std::set< std::string > >;
+		struct Empty
+		{};
+		using set = std::map< std::string, Empty >;
+		using dictionary = std::map< std::string, set >;
 		using named_dictionary = std::pair< std::string, dictionary >;
 		std::vector< named_dictionary > dictionaries_;
 		named_dictionary* current_ = nullptr;
