@@ -1,11 +1,12 @@
 #ifndef MAP_BASE_DECLARATION_HPP
 #define MAP_BASE_DECLARATION_HPP
 
-#include <iterator>
 #include <initializer_list>
+#include <type_traits>
 #include <cstddef>
 #include "pair.hpp"
 #include "node.hpp"
+#include "iterator.hpp"
 
 namespace src
 {
@@ -22,21 +23,22 @@ namespace src
 			using key_compare = Compare;
 			using value_compare = ValueCompare;
 
-			using iterator = std::bidirectional_iterator_tag;
-			using const_iterator = const std::bidirectional_iterator_tag;
-			using reverse_iterator = std::bidirectional_iterator_tag;
-			using const_reverse_iterator = const std::bidirectional_iterator_tag;
+			using iterator = MapIterator< value_type, false, false >;
+			using const_iterator = MapIterator< value_type, true, false >;
+			using reverse_iterator = MapIterator< value_type, false, true >;
+			using const_reverse_iterator = MapIterator< value_type, true, true >;
 
-			MapBase() noexcept;
+			MapBase() noexcept(std::is_nothrow_default_constructible< value_compare >::value);
+			MapBase(const key_compare& compare);
 			MapBase(const MapBase& rhs);
-			MapBase(MapBase&& rhs) noexcept;
+			MapBase(MapBase&& rhs) noexcept(std::is_nothrow_default_constructible< value_compare >::value);
 			template< class InIter >
-			MapBase(InIter from, InIter to);
-			MapBase(std::initializer_list< value_type > list);
+			MapBase(InIter from, InIter to, const key_compare& compare = key_compare());
+			MapBase(std::initializer_list< value_type > list, const key_compare& compare = key_compare());
 			~MapBase();
 
 			MapBase& operator=(const MapBase& rhs);
-			MapBase& operator=(MapBase&& rhs) noexcept;
+			MapBase& operator=(MapBase&& rhs) noexcept(std::is_nothrow_default_constructible< value_compare >::value);
 			MapBase& operator=(std::initializer_list< value_type > list);
 
 			iterator begin() noexcept;
@@ -44,7 +46,7 @@ namespace src
 			const_iterator cbegin() const noexcept;
 			reverse_iterator rbegin() noexcept;
 			const_reverse_iterator rbegin() const noexcept;
-			const_reverse_iterator rcbegin() const noexcept;
+			const_reverse_iterator crbegin() const noexcept;
 
 			iterator end() noexcept;
 			const_iterator end() const noexcept;
