@@ -58,10 +58,10 @@ namespace src
 			bool empty() const noexcept;
 			size_type size() const noexcept;
 			bool contains(const key_type& key) const;
-			iterator lower_bound();
-			const_iterator lower_bound() const;
-			iterator upper_bound();
-			const_iterator upper_bound() const;
+			iterator lower_bound(const key_type& key);
+			const_iterator lower_bound(const key_type& key) const;
+			iterator upper_bound(const key_type& key);
+			const_iterator upper_bound(const key_type& key) const;
 			iterator find(const key_type& key);
 			const_iterator find(const key_type& key) const;
 
@@ -72,8 +72,8 @@ namespace src
 			iterator emplace_hint(const_iterator hint, Args&&... args);
 			template< class... Args >
 			iterator emplace(Args&&... args);
-			Pair< iterator, bool > insert(const value_type& key);
-			Pair< iterator, bool > insert(value_type&& key);
+			Pair< iterator, bool > insert(const value_type& value);
+			Pair< iterator, bool > insert(value_type&& value);
 			iterator erase(const_iterator iter);
 			size_type erase(const key_type& key);
 
@@ -82,6 +82,21 @@ namespace src
 			value_compare compare_;
 			node_type* root_;
 			size_type size_;
+			node_type* min_;
+			node_type* max_;
+
+			static node_type* copy(node_type* current);
+			static void destroy(node_type* node);
+			template< class V = value_type >
+			static key_type& get_key(std::enable_if_t< std::is_same< key_type, V >::value, V& > value);
+			template< class V = value_type >
+			static key_type& get_key(std::enable_if_t< !std::is_same< key_type, V >::value, V& > value);
+			template< class V = value_type >
+			static const key_type& get_key(std::enable_if_t< std::is_same< key_type, V >::value, const V& > value);
+			template< class V = value_type >
+			static const key_type& get_key(std::enable_if_t< !std::is_same< key_type, V >::value, const V& > value);
+			const_iterator lower_bound_impl(const key_type& key) const;
+			const_iterator upper_bound_impl(const key_type& key) const;
 		};
 	}
 }

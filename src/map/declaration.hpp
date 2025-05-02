@@ -1,17 +1,17 @@
 #ifndef MAP_DECLARATION_HPP
 #define MAP_DECLARATION_HPP
 
-#include "map_base/declaration.hpp"
-#include "map_base/value_compare.hpp"
+#include "../map_base.hpp"
+#include <functional>
 
 namespace src
 {
-	template< class Key, class Mapped, class Compare >
+	template< class Key, class Mapped, class Compare = std::less<> >
 	class Map: public details::MapBase< Key,
-		Mapped,
-		Compare,
-		Pair< Key, Mapped >,
-		details::ValueCompare< Pair< Key, Mapped >, Compare > >
+			Mapped,
+			Compare,
+			Pair< Key, Mapped >,
+			details::ValueCompare< Pair< Key, Mapped >, Compare > >
 	{
 	public:
 		using base = details::MapBase< Key,
@@ -19,17 +19,17 @@ namespace src
 			Compare,
 			Pair< Key, Mapped >,
 			details::ValueCompare< Pair< Key, Mapped >, Compare > >;
-		using key_type = base::key_type;
-		using mapped_type = base::mapped_type;
-		using value_type = base::value_type;
-		using size_type = base::size_type;
-		using key_compare = base::key_compare;
-		using value_compare = base::value_compare;
+		using key_type = typename base::key_type;
+		using mapped_type = typename base::mapped_type;
+		using value_type = typename base::value_type;
+		using size_type = typename base::size_type;
+		using key_compare = typename base::key_compare;
+		using value_compare = typename base::value_compare;
 
-		using iterator = base::iterator;
-		using const_iterator = base::const_iterator;
-		using reverse_iterator = base::reverse_iterator;
-		using const_reverse_iterator = base::const_reverse_iterator;
+		using iterator = typename base::iterator;
+		using const_iterator = typename base::const_iterator;
+		using reverse_iterator = typename base::reverse_iterator;
+		using const_reverse_iterator = typename base::const_reverse_iterator;
 
 		mapped_type& at(const key_type& key);
 		const mapped_type& at(const key_type& key) const;
