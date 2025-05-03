@@ -51,7 +51,14 @@ namespace src
 			{
 				return std::addressof(data_->value_);
 			}
-
+			bool operator==(const MapIterator& rhs) const noexcept
+			{
+				return data_ == rhs.data_;
+			}
+			bool operator!=(const MapIterator& rhs) const noexcept
+			{
+				return !operator==(rhs);
+			}
 			MapIterator& operator++() noexcept
 			{
 				if (isReversed)
@@ -101,27 +108,31 @@ namespace src
 			node_type* prev_;
 			void shift_left() noexcept
 			{
-				if (data_->left_)
+				if (data_->left_ != nullptr)
 				{
 					for (data_ = data_->left_; data_->right_ != nullptr; data_ = data_->right_)
 					{}
 				}
 				else
 				{
-					for (prev_ = data_; (data_ != nullptr) && (data_->left_ == prev_); prev_ = data_, data_ = data_->parent_)
+					prev_ = data_;
+					data_ = data_->parent_;
+					for (; (data_ != nullptr) && (data_->left_ == prev_); prev_ = data_, data_ = data_->parent_)
 					{}
 				}
 			}
 			void shift_right() noexcept
 			{
-				if (data_->right_)
+				if (data_->right_ != nullptr)
 				{
 					for (data_ = data_->right_; data_->left_ != nullptr; data_ = data_->left_)
 					{}
 				}
 				else
 				{
-					for (prev_ = data_; (data_ != nullptr) && (data_->right_ == prev_); prev_ = data_, data_ = data_->parent_)
+					prev_ = data_;
+					data_ = data_->parent_;
+					for (; (data_ != nullptr) && (data_->right_ == prev_); prev_ = data_, data_ = data_->parent_)
 					{}
 				}
 			}

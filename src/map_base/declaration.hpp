@@ -18,7 +18,7 @@ namespace src
 		public:
 			using key_type = Key;
 			using mapped_type = Mapped;
-			using value_type = Pair< key_type, mapped_type >;
+			using value_type = Value;
 			using size_type = size_t;
 			using key_compare = Compare;
 			using value_compare = ValueCompare;
@@ -57,6 +57,10 @@ namespace src
 
 			bool empty() const noexcept;
 			size_type size() const noexcept;
+
+			map_node_t< value_type >* root() const noexcept;
+			size_type black_height(const_iterator iter) const noexcept;
+
 			bool contains(const key_type& key) const;
 			iterator lower_bound(const key_type& key);
 			const_iterator lower_bound(const key_type& key) const;
@@ -66,7 +70,7 @@ namespace src
 			const_iterator find(const key_type& key) const;
 
 			void clear();
-			void swap(const MapBase& rhs) noexcept;
+			void swap(MapBase& rhs);
 
 			template< class... Args >
 			iterator emplace_hint(const_iterator hint, Args&&... args);
@@ -76,7 +80,6 @@ namespace src
 			Pair< iterator, bool > insert(value_type&& value);
 			iterator erase(const_iterator iter);
 			size_type erase(const key_type& key);
-
 		private:
 			using node_type = map_node_t< value_type >;
 			value_compare compare_;
@@ -87,16 +90,25 @@ namespace src
 
 			static node_type* copy(node_type* current);
 			static void destroy(node_type* node);
+
+			bool compare_with_key(const key_type& lhs, const key_type& rhs) const;
 			template< class V = value_type >
-			static key_type& get_key(std::enable_if_t< std::is_same< key_type, V >::value, V& > value);
+			bool compare_with_key(std::enable_if_t< !std::is_same< key_type, V >::value, const V& > lhs,
+					const key_type& rhs) const;
 			template< class V = value_type >
-			static key_type& get_key(std::enable_if_t< !std::is_same< key_type, V >::value, V& > value);
+			bool compare_with_key(const key_type& lhs,
+					std::enable_if_t< !std::is_same< key_type, V >::value, const V& > rhs) const;
 			template< class V = value_type >
 			static const key_type& get_key(std::enable_if_t< std::is_same< key_type, V >::value, const V& > value);
 			template< class V = value_type >
 			static const key_type& get_key(std::enable_if_t< !std::is_same< key_type, V >::value, const V& > value);
+
 			const_iterator lower_bound_impl(const key_type& key) const;
 			const_iterator upper_bound_impl(const key_type& key) const;
+			iterator insert(const_iterator hint, node_type* node);
+
+			void rotate_left(node_type* node) noexcept;
+			void rotate_right(node_type* node) noexcept;
 		};
 	}
 }

@@ -10,15 +10,15 @@ namespace src
 	class Map: public details::MapBase< Key,
 			Mapped,
 			Compare,
-			Pair< Key, Mapped >,
-			details::ValueCompare< Pair< Key, Mapped >, Compare > >
+			Pair< const Key, Mapped >,
+			details::ValueCompare< Pair< const Key, Mapped >, Compare > >
 	{
 	public:
-		using base = details::MapBase< Key,
+		using base = details::MapBase< const Key,
 			Mapped,
 			Compare,
-			Pair< Key, Mapped >,
-			details::ValueCompare< Pair< Key, Mapped >, Compare > >;
+			Pair< const Key, Mapped >,
+			details::ValueCompare< Pair< const Key, Mapped >, Compare > >;
 		using key_type = typename base::key_type;
 		using mapped_type = typename base::mapped_type;
 		using value_type = typename base::value_type;

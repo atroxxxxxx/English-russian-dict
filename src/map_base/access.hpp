@@ -60,28 +60,34 @@ typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::con
 src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::find(const key_type& key) const
 {
 	const_iterator iter = lower_bound(key);
-	if ((iter != end()) && !compare_(key, get_key(*iter)))
+	if ((iter != end()) && !compare_with_key(key, *iter))
 	{
 		return iter;
 	}
 	return end();
 }
+
 template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
-template< class V >
-typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::key_type&
-src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::get_key
-		(std::enable_if_t< std::is_same< key_type, V >::value, V& > value)
+bool src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::compare_with_key
+		(const key_type& lhs, const key_type& rhs) const
 {
-	return value;
+	return compare_(lhs, rhs);
 }
 template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
 template< class V >
-typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::key_type&
-src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::get_key
-		(std::enable_if_t< !std::is_same< key_type, V >::value, V& > value)
+bool src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::compare_with_key
+		(std::enable_if_t< !std::is_same< key_type, V >::value, const V& > lhs, const key_type& rhs) const
 {
-	return value.first;
+	return compare_.compare(lhs.first, rhs);
 }
+template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
+template< class V >
+bool src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::compare_with_key
+		(const key_type& lhs, std::enable_if_t< !std::is_same< key_type, V >::value, const V& > rhs) const
+{
+	return compare_.compare(lhs, rhs.first);
+}
+
 template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
 template< class V >
 const typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::key_type&
@@ -110,7 +116,7 @@ src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::lower_bound_
 	const_iterator cashed = end();
 	while (true)
 	{
-		if (compare_(key, get_key(current.data_->value_)))
+		if (compare_with_key(key, current.data_->value_))
 		{
 			cashed = current;
 			if (current.data_->left_ == nullptr)
@@ -119,7 +125,7 @@ src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::lower_bound_
 			}
 			current.data_ = current.data_->left_;
 		}
-		else if (!compare_(get_key(current.data_->value_), key))
+		else if (!compare_with_key(current.data_->value_, key))
 		{
 			return current;
 		}
@@ -145,7 +151,7 @@ src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::upper_bound_
 	const_iterator cashed = end();
 	while (true)
 	{
-		if (compare_(key, get_key(current.data_->value_)))
+		if (compare_with_key(key, current.data_->value_))
 		{
 			cashed = current;
 			if (current.data_->left_ == nullptr)

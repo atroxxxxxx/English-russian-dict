@@ -9,5 +9,7 @@
 #include "map_base/access_iterators.hpp"
 #include "map_base/access.hpp"
 #include "map_base/modifiers.hpp"
+#include "map_base/insert.hpp"
+#include "map_base/erase.hpp"
 
 #endif
