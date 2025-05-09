@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: jwlawson/actions-setup-cmake@v1
         with:
           version: '3.23'
@@ -23,7 +23,7 @@ jobs:
           sudo apt-get install -y build-essential
           cmake -S . -B ${{ env.BUILD_DIR }}
           cmake --build ${{ env.BUILD_DIR }} --target all -- -j$(nproc)
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: ${{ env.BUILD_DIR }}
@@ -32,8 +32,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ${{ env.BUILD_DIR }}
@@ -41,15 +41,15 @@ jobs:
           cd ${{ env.BUILD_DIR }}
           ctest --output-on-failure
 
-  main-logic-tests:
+  integration-tests:
     needs: [build, unit-tests]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         test_num: [1, 2]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: ${{ env.BUILD_DIR }}
