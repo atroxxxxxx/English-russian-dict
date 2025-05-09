@@ -24,7 +24,6 @@ CMakePresets.json
 **/.dep/
 *Makefile
 *.mk
-*.sh
 *.d
 **/cmake-*
 **/.idea

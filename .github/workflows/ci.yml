@@ -19,25 +19,17 @@ jobs:
         with:
           version: '3.23'
       - run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential
-          cmake -S . -B ${{ env.BUILD_DIR }}
-          cmake --build ${{ env.BUILD_DIR }} --target all -- -j$(nproc)
-      - uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: ${{ env.BUILD_DIR }}
+          chmod +x .github/build.sh
+          .github/build.sh ${{ env.BUILD_DIR }}
 
   unit-tests:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: ${{ env.BUILD_DIR }}
       - run: |
+          chmod +x .github/build.sh
+          .github/build.sh ${{ env.BUILD_DIR }}
           cd ${{ env.BUILD_DIR }}
           ctest --output-on-failure
 
@@ -49,11 +41,9 @@ jobs:
         test_num: [1, 2]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: ${{ env.BUILD_DIR }}
       - run: |
+          chmod +x .github/build.sh
+          .github/build.sh ${{ env.BUILD_DIR }}
           cd ${{ env.BUILD_DIR }}
           INPUT="../${{ env.TESTS_DIR }}/input/input_${{ matrix.test_num }}"
           OUT="../${{ env.TESTS_DIR }}/output/output_${{ matrix.test_num }}"
