@@ -45,9 +45,9 @@ jobs:
           chmod +x .github/build.sh
           .github/build.sh ${{ env.BUILD_DIR }}
           cd ${{ env.BUILD_DIR }}
-          INPUT="../${{ env.TESTS_DIR }}/input/input_${{ matrix.test_num }}"
-          OUT="../${{ env.TESTS_DIR }}/output/output_${{ matrix.test_num }}"
-          ERR="../${{ env.TESTS_DIR }}/error/error_${{ matrix.test_num }}"
+          INPUT="../${{ env.TESTS_DIR }}/input/input_${{ matrix.test_num }}.txt"
+          OUT="../${{ env.TESTS_DIR }}/output/output_${{ matrix.test_num }}.txt"
+          ERR="../${{ env.TESTS_DIR }}/error/error_${{ matrix.test_num }}.txt"
           [ -f "$OUT" ] || { echo "::error::Missing $OUT"; exit 1; }
           [ -f "$ERR" ] || { echo "::error::Missing $ERR"; exit 1; }
           if [ -f "$INPUT" ]; then
