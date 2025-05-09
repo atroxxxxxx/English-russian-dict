@@ -12,104 +12,58 @@ env:
 
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
-    outputs:
-      build_cache_key: ${{ steps.cache_build.outputs.cache-key }}
-
     steps:
       - uses: actions/checkout@v3
-
-      - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v1
+      - uses: jwlawson/actions-setup-cmake@v1
         with:
           version: '3.23'
-
-      - name: Install build tools
-        run: |
+      - run: |
           sudo apt-get update
           sudo apt-get install -y build-essential
-
-      - name: Configure CMake
-        run: cmake -S . -B ${{ env.BUILD_DIR }}
-
-      - name: Build targets
-        run: |
-          cd ${{ env.BUILD_DIR }}
-          make -j$(nproc)
-          cd ../
-
-      - name: Cache build artifacts
-        id: cache_build
-        uses: actions/cache@v3
+          cmake -S . -B ${{ env.BUILD_DIR }}
+          cmake --build ${{ env.BUILD_DIR }} --target all -- -j$(nproc)
+      - uses: actions/upload-artifact@v3
         with:
+          name: build-artifacts
           path: ${{ env.BUILD_DIR }}
-          key: ${{ runner.os }}-build-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-build-
 
   unit-tests:
-    name: Unit Tests
     needs: build
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
-      - name: Restore build artifacts
-        uses: actions/cache@v3
+      - uses: actions/download-artifact@v3
         with:
+          name: build-artifacts
           path: ${{ env.BUILD_DIR }}
-          key: ${{ needs.build.outputs.build_cache_key }}
-
-      - name: Run unit tests
-        run: |
+      - run: |
           cd ${{ env.BUILD_DIR }}
           ctest --output-on-failure
 
-  integration-tests:
-    name: Integration Tests
+  main-logic-tests:
     needs: [build, unit-tests]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         test_num: [1, 2]
-
     steps:
       - uses: actions/checkout@v3
-
-      - name: Restore build artifacts
-        uses: actions/cache@v3
+      - uses: actions/download-artifact@v3
         with:
+          name: build-artifacts
           path: ${{ env.BUILD_DIR }}
-          key: ${{ needs.build.outputs.build_cache_key }}
-
-      - name: Run test case ${{ matrix.test_num }}
-        run: |
+      - run: |
           cd ${{ env.BUILD_DIR }}
-          INPUT_FILE="../${{ env.TESTS_DIR }}/input/input_${{ matrix.test_num }}"
-          EXPECTED_OUT="../${{ env.TESTS_DIR }}/output/output_${{ matrix.test_num }}"
-          EXPECTED_ERR="../${{ env.TESTS_DIR }}/error/error_${{ matrix.test_num }}"
-
-          if [ ! -f "$EXPECTED_OUT" ]; then
-            echo "::error::Missing expected output $EXPECTED_OUT"
-            exit 1
-          fi
-          if [ ! -f "$EXPECTED_ERR" ]; then
-            echo "::error::Missing expected error $EXPECTED_ERR"
-            exit 1
-          fi
-
-          if [ -f "$INPUT_FILE" ]; then
-            ./run "$INPUT_FILE" > actual_out 2> actual_err
+          INPUT="../${{ env.TESTS_DIR }}/input/input_${{ matrix.test_num }}"
+          OUT="../${{ env.TESTS_DIR }}/output/output_${{ matrix.test_num }}"
+          ERR="../${{ env.TESTS_DIR }}/error/error_${{ matrix.test_num }}"
+          [ -f "$OUT" ] || { echo "::error::Missing $OUT"; exit 1; }
+          [ -f "$ERR" ] || { echo "::error::Missing $ERR"; exit 1; }
+          if [ -f "$INPUT" ]; then
+            ./run "$INPUT" > actual_out 2> actual_err
           else
             ./run > actual_out 2> actual_err
           fi
-
-          echo "=== Checking stdout ==="
-          diff -u --color "$EXPECTED_OUT" actual_out || exit 1
-          
-          echo "=== Checking stderr ==="
-          diff -u --color "$EXPECTED_ERR" actual_err || exit 1
-          
-          echo "Test ${{ matrix.test_num }} PASSED"
+          diff -u "$OUT" actual_out || exit 1
+          diff -u "$ERR" actual_err || exit 1
