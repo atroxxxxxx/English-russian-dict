@@ -1,4 +1,4 @@
-name: Build and Test
+name: Testing
 
 on:
   push:
@@ -13,64 +13,87 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      artifact_name: ${{ steps.upload.outputs.artifact-name }}
+
     steps:
       - uses: actions/checkout@v4
-      - uses: jwlawson/actions-setup-cmake@v1
-        with:
-          version: '3.23'
-      - run: |
-          chmod +x .github/build.sh
-          .github/build.sh ${{ env.BUILD_DIR }}
+      - name: Build project
+        run: |
+          cmake -S . -B ${{ env.BUILD_DIR }}
+          cmake --build ${{ env.BUILD_DIR }} -- -j$(nproc)
 
+      - name: Upload artifacts
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: ${{ env.BUILD_DIR }}
   unit-tests:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          chmod +x .github/build.sh
-          .github/build.sh ${{ env.BUILD_DIR }}
+
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: ${{ env.BUILD_DIR }}
+
+      - name: Run test
+        run: |
           cd ${{ env.BUILD_DIR }}
           ctest --output-on-failure
-
-  integration-tests:
-    needs: [build, unit-tests]
+  main-logic-tests:
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
         test_num: [1, 2]
+
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          chmod +x .github/build.sh
-          .github/build.sh ${{ env.BUILD_DIR }}
+
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: ${{ env.BUILD_DIR }}
+
+      - name: Run test ${{ matrix.test_num }}
+        run: |
           cd ${{ env.BUILD_DIR }}
-          INPUT="../${{ env.TESTS_DIR }}/input/input_${{ matrix.test_num }}"
-          OUT="../${{ env.TESTS_DIR }}/output/output_${{ matrix.test_num }}"
-          ERR="../${{ env.TESTS_DIR }}/error/error_${{ matrix.test_num }}"
+          INPUT_FILE="${{ env.TESTS_DIR }}/input/input_${{ matrix.test_num }}"
+          EXPECTED_OUT="${{ env.TESTS_DIR }}/output/output_${{ matrix.test_num }}"
+          EXPECTED_ERR="${{ env.TESTS_DIR }}/error/error_${{ matrix.test_num }}"
+          EXPECTED_EXIT=$(awk "NR==${{ matrix.test_num }}" "${{ env.TESTS_DIR }}/exit_codes.txt")
+
+          # Проверка файлов
+          [ -f "$INPUT_FILE" ] || { echo "::error::Missing input file"; exit 1; }
+          [ -f "$EXPECTED_OUT" ] || { echo "::error::Missing output file"; exit 1; }
+          [ -f "$EXPECTED_ERR" ] || { echo "::error::Missing error file"; exit 1; }
           
-          if [ ! -f "$OUT" ] || [ ! -f "$ERR" ]; then
-          echo "::warning::Test files missing for test ${{ matrix.test_num }}"
-          exit 0
+          # Запуск и проверка
+          ./run "$INPUT_FILE" > actual_out 2> actual_err
+          ACTUAL_EXIT=$?
+          
+          if [ $ACTUAL_EXIT -ne $EXPECTED_EXIT ]; then
+            echo "::error::Exit code mismatch. Expected $EXPECTED_EXIT, got $ACTUAL_EXIT"
+            exit 1
           fi
           
-          if [ -f "$INPUT" ]; then
-          ./run "$INPUT" > actual_out 2> actual_err || EXIT_CODE=$?
-          else
-          ./run > actual_out 2> actual_err || EXIT_CODE=$?
-          fi
-          
-          if [ ${EXIT_CODE:-0} -eq 1 ]; then
-          echo "::notice::Test ${{ matrix.test_num }} returned exit code 1 (expected behavior)"
-          elif [ ${EXIT_CODE:-0} -ne 0 ]; then
-          echo "::error::Test ${{ matrix.test_num }} failed with exit code ${EXIT_CODE}"
-          exit ${EXIT_CODE}
-          fi
-          
-          diff -u "$OUT" actual_out || DIFF_OUT=$?
-          diff -u "$ERR" actual_err || DIFF_ERR=$?
-          
-          if [ ${DIFF_OUT:-0} -ne 0 ] || [ ${DIFF_ERR:-0} -ne 0 ]; then
-          echo "::error::Test ${{ matrix.test_num }} output mismatch"
-          exit 1
-          fi
+          diff -u "$EXPECTED_OUT" actual_out || { echo "::error::Stdout mismatch"; exit 1; }
+          diff -u "$EXPECTED_ERR" actual_err || { echo "::error::Stderr mismatch"; exit 1; }
+
+  cleanup:
+    needs: [build, integration-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Delete artifacts
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: build-artifacts
+      - name: Clean workspace
+        run: rm -rf ${{ env.BUILD_DIR }}
