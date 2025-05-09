@@ -15,7 +15,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     outputs:
-      build_cache_key: ${{ steps.cache_build.outputs.cache_key }}
+      build_cache_key: ${{ steps.cache_build.outputs.cache-key }}
 
     steps:
       - uses: actions/checkout@v3
@@ -44,9 +44,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.BUILD_DIR }}
-          key: build-${{ github.sha }}
+          key: ${{ runner.os }}-build-${{ github.sha }}
           restore-keys: |
-            build-
+            ${{ runner.os }}-build-
 
   unit-tests:
     name: Unit Tests
@@ -67,13 +67,13 @@ jobs:
           cd ${{ env.BUILD_DIR }}
           ctest --output-on-failure
 
-  main-logic-test:
+  integration-tests:
     name: Integration Tests
     needs: [build, unit-tests]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test_case: [1, 2]
+        test_num: [1, 2]
 
     steps:
       - uses: actions/checkout@v3
@@ -84,26 +84,23 @@ jobs:
           path: ${{ env.BUILD_DIR }}
           key: ${{ needs.build.outputs.build_cache_key }}
 
-      - name: Run test case ${{ matrix.test_case }}
+      - name: Run test case ${{ matrix.test_num }}
         run: |
           cd ${{ env.BUILD_DIR }}
           INPUT_FILE="../${{ env.TESTS_DIR }}/input/input_${{ matrix.test_num }}"
           EXPECTED_OUT="../${{ env.TESTS_DIR }}/output/output_${{ matrix.test_num }}"
           EXPECTED_ERR="../${{ env.TESTS_DIR }}/error/error_${{ matrix.test_num }}"
 
-          if [ ! -f "$EXPECTED_OUT" ];
-          then
+          if [ ! -f "$EXPECTED_OUT" ]; then
             echo "::error::Missing expected output $EXPECTED_OUT"
             exit 1
           fi
-          if [ ! -f "$EXPECTED_ERR" ];
-          then
+          if [ ! -f "$EXPECTED_ERR" ]; then
             echo "::error::Missing expected error $EXPECTED_ERR"
             exit 1
           fi
 
-          if [ -f "$INPUT_FILE" ];
-          then
+          if [ -f "$INPUT_FILE" ]; then
             ./run "$INPUT_FILE" > actual_out 2> actual_err
           else
             ./run > actual_out 2> actual_err
