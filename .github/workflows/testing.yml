@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test_num: [ 1, 2 ]
+        test_num: [ 1, 2, 3 ]
     steps:
       - uses: actions/checkout@v4
       - name: load artifact

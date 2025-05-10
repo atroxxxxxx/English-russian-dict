@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23 FATAL_ERROR)
 project(English_russian_dict)
 
 set(CMAKE_CXX_STANDARD 14)
-#set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror")
+set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror")
 
 include(FetchContent)
 FetchContent_Declare(
