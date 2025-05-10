@@ -30,9 +30,9 @@ check_file() {
         fi
     done < "$file"
 
-    if [ "$(tail -c 1 "$file" | xxd -p)" != "0a" ]; then
+    if [ -s "$file" ] && [ "$(tail -c 1 "$file" | od -An -tx1 | tr -d ' \n')" != "0a" ]; then
         echo "::error::Файл '$file' должен заканчиваться символом новой строки (LF)"
-        has_no_final_newline=1
+        has_errors=1
     fi
 
     if [ "$has_trailing_space" -eq 1 ] || [ "$has_long_line" -eq 1 ] || [ "$has_no_final_newline" -eq 1 ]; then
