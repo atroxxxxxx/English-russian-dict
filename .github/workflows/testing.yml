@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: build
         run: |
-          cmod +x ./${{ env.SCRIPT_DIR }}/build.sh
+          chmod +x ./${{ env.SCRIPT_DIR }}/build.sh
           ./${{ env.SCRIPT_DIR }}/build.sh ${{ env.BUILD_DIR }}
       - name: upload artifacts
         uses: actions/upload-artifact@v4
@@ -37,7 +37,7 @@ jobs:
           path: ${{ env.BUILD_DIR }}
           overwrite: true
   Gtest:
-    needs: Content
+    needs: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
