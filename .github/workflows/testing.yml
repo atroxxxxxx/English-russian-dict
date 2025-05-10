@@ -14,16 +14,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: work tree
-        run: ./${{ env.SCRIPT_DIR }}/work_tree.sh
+        run: |
+          chmod +x ./${{ env.SCRIPT_DIR }}/work_tree.sh
+          ./${{ env.SCRIPT_DIR }}/work_tree.sh ./
       - name: content
-        run: ./${{ env.SCRIPT_DIR }}/content.sh
+        run: |
+          chmod +x ./${{ env.SCRIPT_DIR }}/content.sh
+          ./${{ env.SCRIPT_DIR }}/content.sh
   Build:
     needs: Content
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: build
-        run: ./${{ env.SCRIPT_DIR }}/build.sh ${{ env.BUILD_DIR }}
+        run: |
+          cmod +x ./${{ env.SCRIPT_DIR }}/build.sh
+          ./${{ env.SCRIPT_DIR }}/build.sh ${{ env.BUILD_DIR }}
       - name: upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -58,4 +64,6 @@ jobs:
           name: build
           path: ${{ env.BUILD_DIR }}
       - name: run
-        run: /${{ env.SCRIPT_DIR }}/run.sh ${{ env.BUILD_DIR }} ${{ env.TESTS_DIR }} ${{ matrix.test_num }}
+        run: |
+          chmod +x ./${{ env.SCRIPT_DIR }}/run.sh
+          /${{ env.SCRIPT_DIR }}/run.sh ${{ env.BUILD_DIR }} ${{ env.TESTS_DIR }} ${{ matrix.test_num }}
