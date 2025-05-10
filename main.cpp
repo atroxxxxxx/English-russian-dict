@@ -38,6 +38,17 @@ void print(src::details::map_node_t< src::Pair< const int, int > >* node, size_t
 			<< ": " << (node->isRed_ ? 'R' : 'B') << '\n';
 	print(node->right_, level + 1);
 }
+void print(src::details::map_node_t< int >* node, size_t level)
+{
+	if (node == nullptr)
+	{
+		return;
+	}
+	print(node->left_, level + 1);
+	std::cout << std::string("\t\t\t\t", level) << node->value_
+	          << ": " << (node->isRed_ ? 'R' : 'B') << '\n';
+	print(node->right_, level + 1);
+}
 
 void map_base_testing()
 {
@@ -104,10 +115,34 @@ void map_base_testing()
 	{
 		std::cout << i << '\n';
 	}
+	std::cout << "---\n";
+	print(set.root(), 0);
+	std::cout << "---erase---\n";
+	std::cout << set.erase(3) << '\n';
+	std::cout << "---\n";
+	for (auto i: set)
+	{
+		std::cout << i << '\n';
+	}
+	std::cout << "---\n";
+	std::cout << set.erase(1) << '\n';
+	std::cout << "---\n";
+	for (auto i: set)
+	{
+		std::cout << i << '\n';
+	}
+	std::cout << "---\n";
+	print(set.root(), 0);
 }
 
 
-int main()
+int main(int argc, char** argv)
 {
-	std::cout << init::initialString() << '\n';
+	if (argc > 1)
+	{
+		std::cerr << "pashalka)\n";
+		return 1;
+	}
+	map_base_testing();
+	//std::cout << init::initialString() << '\n';
 }

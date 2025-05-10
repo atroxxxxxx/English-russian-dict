@@ -93,6 +93,7 @@ void src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::rotate_
 	}
 	node->left_ = parent;
 }
+
 template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
 void src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::rotate_right(node_type* node) noexcept
 {
