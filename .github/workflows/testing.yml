@@ -50,6 +50,13 @@ jobs:
         run: |
           chmod +x ./${{ env.SCRIPT_DIR }}/test.sh
           ./${{ env.SCRIPT_DIR }}/test.sh ${{ env.BUILD_DIR }}
+             - name: upload artifacts
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: ${{ env.BUILD_DIR }}
+          overwrite: true
   Main-logic:
     needs: Gtest
     runs-on: ubuntu-latest
