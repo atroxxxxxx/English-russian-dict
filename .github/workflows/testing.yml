@@ -1,0 +1,75 @@
+name: Testing
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+env:
+  BUILD_DIR: cmake-build
+  TEST_DIR: .github/tests
+  SCRIPT_DIR: .github/scripts
+jobs:
+  Content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: work tree
+        run: |
+          chmod +x ./${{ env.SCRIPT_DIR }}/work_tree.sh
+          ./${{ env.SCRIPT_DIR }}/work_tree.sh ./
+      - name: content
+        run: |
+          chmod +x ./${{ env.SCRIPT_DIR }}/content.sh
+          ./${{ env.SCRIPT_DIR }}/content.sh
+  Build:
+    needs: Content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build
+        run: |
+          chmod +x ./${{ env.SCRIPT_DIR }}/build.sh
+          ./${{ env.SCRIPT_DIR }}/build.sh ${{ env.BUILD_DIR }}
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: ${{ env.BUILD_DIR }}
+          overwrite: true
+  Gtest:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: load artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: ${{ env.BUILD_DIR }}
+      - name: run gtest
+        run: |
+          chmod +x ./${{ env.SCRIPT_DIR }}/test.sh
+          ./${{ env.SCRIPT_DIR }}/test.sh ${{ env.BUILD_DIR }}
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: ${{ env.BUILD_DIR }}
+          overwrite: true
+  Main-logic:
+    needs: Gtest
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test_num: [ 1, 2 ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: load artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: ${{ env.BUILD_DIR }}
+      - name: run
+        run: |
+          chmod +x ./${{ env.SCRIPT_DIR }}/run.sh
+          ./${{ env.SCRIPT_DIR }}/run.sh ${{ env.BUILD_DIR }} ${{ env.TEST_DIR }} ${{ matrix.test_num }}
