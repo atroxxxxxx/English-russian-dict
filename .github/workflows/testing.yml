@@ -71,5 +71,7 @@ jobs:
           path: ${{ env.BUILD_DIR }}
       - name: run
         run: |
+          ls -la ./${{ env.SCRIPT_DIR }}/
+          ls -la ./${{ env.BUILD_DIR }}/
           chmod +x ./${{ env.SCRIPT_DIR }}/run.sh
           /${{ env.SCRIPT_DIR }}/run.sh ${{ env.BUILD_DIR }} ${{ env.TEST_DIR }} ${{ matrix.test_num }}
