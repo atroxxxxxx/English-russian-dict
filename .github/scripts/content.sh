@@ -30,8 +30,8 @@ check_file() {
         fi
     done < "$file"
 
-    if [ "$(tail -c 1 "$file" | wc -l)" -eq 0 ]; then
-        echo "::error::Файл '$file' должен заканчиваться пустой строкой"
+    if [ "$(tail -c 1 "$file" | xxd -p)" != "0a" ]; then
+        echo "::error::Файл '$file' должен заканчиваться символом новой строки (LF)"
         has_no_final_newline=1
     fi
 
