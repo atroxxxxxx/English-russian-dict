@@ -11,6 +11,8 @@ EXPECTED_EXIT=$(awk "NR==$TEST_NUM" $TESTS_DIR/exit_codes.txt)
 
 cd "$BUILD_DIR" || { echo "::error:: $BUILD_DIR не найдена"; exit 1; }
 
+chmod +x ./run
+
 if [ ! -f ./run ]; then
     echo "::error:: бинарник ./run не найден в $BUILD_DIR"
     exit 1
