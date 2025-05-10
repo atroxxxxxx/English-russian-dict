@@ -66,4 +66,4 @@ jobs:
       - name: run
         run: |
           chmod +x ./${{ env.SCRIPT_DIR }}/run.sh
-          /${{ env.SCRIPT_DIR }}/run.sh ${{ env.BUILD_DIR }} ${{ env.TESTS_DIR }} ${{ matrix.test_num }}
+          /${{ env.SCRIPT_DIR }}/run.sh ${{ env.BUILD_DIR }} ${{ env.TEST_DIR }} ${{ matrix.test_num }}
