@@ -6,8 +6,8 @@ on:
   pull_request:
 env:
   BUILD_DIR: cmake-build
-  TEST_DIR: .github/tests
-  SCRIPT_DIR: .github/srcipts
+  TEST_DIR: .github-tests/tests
+  SCRIPT_DIR: .github-tests/srcipts
 jobs:
   Content:
     runs-on: ubuntu-latest
