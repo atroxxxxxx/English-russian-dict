@@ -48,8 +48,8 @@ jobs:
           path: ${{ env.BUILD_DIR }}
       - name: run gtest
         run: |
-          cd ${{ env.BUILD_DIR }}
-          ctest --output-on-failure
+          chmod +x ./${{ env.SCRIPT_DIR }}/test.sh
+          ./${{ env.SCRIPT_DIR }}/test.sh ${{ env.BUILD_DIR }}
   Main-logic:
     needs: Gtest
     runs-on: ubuntu-latest

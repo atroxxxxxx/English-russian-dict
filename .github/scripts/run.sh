@@ -9,10 +9,10 @@ EXPECTED_OUT="$TESTS_DIR/output/output_$TEST_NUM.txt"
 EXPECTED_ERR="$TESTS_DIR/error/error_$TEST_NUM.txt"
 EXPECTED_EXIT=$(awk "NR==$TEST_NUM" $TESTS_DIR/exit_codes.txt)
 
-cd "$BUILD_DIR" || { echo "::error::Failed to cd to $BUILD_DIR"; exit 1; }
+cd "$BUILD_DIR" || { echo "::error:: $BUILD_DIR не найдена"; exit 1; }
 
 if [ ! -f ./run ]; then
-    echo "::error::Binary ./run not found in $BUILD_DIR"
+    echo "::error:: бинарник ./run не найден в $BUILD_DIR"
     exit 1
 fi
 
@@ -23,9 +23,9 @@ else
 fi
 
 if [ $CURRENT_EXIT -ne $EXPECTED_EXIT ]; then
-    echo "::error::Exit code mismatch. Expected $EXPECTED_EXIT, got $CURRENT_EXIT"
+    echo "::error:: выходной код программы не совпадает. Ожидается: $EXPECTED_EXIT, получен: $CURRENT_EXIT"
     exit 1
 fi
 
-diff -u "../$EXPECTED_OUT" current_out || { echo "::error::Stdout mismatch"; exit 1; }
-diff -u "../$EXPECTED_ERR" current_err || { echo "::error::Stderr mismatch"; exit 1; }
+diff -u "../$EXPECTED_OUT" current_out || { echo "::error:: вывод в стандартный поток ввода не совпадает"; exit 1; }
+diff -u "../$EXPECTED_ERR" current_err || { echo "::error:: вывод в стандартный поток ошибок не совпадает"; exit 1; }
