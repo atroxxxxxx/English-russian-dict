@@ -149,6 +149,6 @@ int main(int argc, char** argv)
 	{
 		std::cout << "It was a plan\n";
 	}
-	return 0;
 	map_base_testing();
+	return 0;
 }
