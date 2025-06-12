@@ -6,8 +6,10 @@ namespace src
 	template< class T, class U >
 	struct Pair
 	{
-		T first;
-		U second;
+		using first_type = T;
+		using second_type = U;
+		first_type first;
+		second_type second;
 	};
 }
 

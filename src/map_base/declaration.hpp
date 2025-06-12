@@ -58,9 +58,6 @@ namespace src
 			bool empty() const noexcept;
 			size_type size() const noexcept;
 
-			map_node_t< value_type >* root() const noexcept;
-			size_type black_height(const_iterator iter) const noexcept;
-
 			bool contains(const key_type& key) const;
 			iterator lower_bound(const key_type& key);
 			const_iterator lower_bound(const key_type& key) const;
