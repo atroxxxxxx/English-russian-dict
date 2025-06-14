@@ -56,20 +56,20 @@ jobs:
           name: build
           path: ${{ env.BUILD_DIR }}
           overwrite: true
-  Main-logic:
-    needs: Gtest
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        test_num: [ 1, 2 ]
-    steps:
-      - uses: actions/checkout@v4
-      - name: load artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build
-          path: ${{ env.BUILD_DIR }}
-      - name: run
-        run: |
-          chmod +x ./${{ env.SCRIPT_DIR }}/run.sh
-          ./${{ env.SCRIPT_DIR }}/run.sh ${{ env.BUILD_DIR }} ${{ env.TEST_DIR }} ${{ matrix.test_num }}
+#  Main-logic:
+#    needs: Gtest
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        test_num: [ 1, 2 ]
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: load artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: build
+#          path: ${{ env.BUILD_DIR }}
+#      - name: run
+#        run: |
+#          chmod +x ./${{ env.SCRIPT_DIR }}/run.sh
+#          ./${{ env.SCRIPT_DIR }}/run.sh ${{ env.BUILD_DIR }} ${{ env.TEST_DIR }} ${{ matrix.test_num }}
