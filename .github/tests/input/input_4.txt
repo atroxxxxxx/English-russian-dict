@@ -1,0 +1,8 @@
+PRINT DICT
+REMOVE WORD water
+ADD WORD air_ воздух, атмосфера;
+ADD WORD air: воздух, атмосфера;
+ADD WORD air: воздух, атмосфера;
+CLEAR
+ADD WORD air: воздух, атмосфера;
+PRINT DICT
