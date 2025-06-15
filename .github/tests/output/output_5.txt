@@ -7,3 +7,10 @@ CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
 <INVALID COMMAND\FORMAT>
+apple added
+apple was removed
+apple added
+apple: плод_яблони, яблоко;
+Translate(s) was added to word apple
+apple: плод_яблони, яблоко, яблоневый, яблочный_сок;
+Dictionary has been completely cleaned up

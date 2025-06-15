@@ -1,0 +1,12 @@
+HELP
+ADD WORD sunrise: восход, заря, утренний_свет;
+PRINT WORD sunrise
+ADD TRANSLATE apple: яблочный_пирог, яблочный_сок, яблоневый;
+PRINT WORD apple
+REMOVE TRANSLATE apple: сладкое_яблоко, яблоневый;
+PRINT WORD apple
+REMOVE WORD sunset
+REMOVE WORD sunrise
+PRINT WORD sunrise
+CLEAR
+PRINT DICT

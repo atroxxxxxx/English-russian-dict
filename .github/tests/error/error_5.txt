@@ -1,5 +1,7 @@
 File wasn't found/open. Creating empty dictionary
 Dictionary is empty
-Dictionary is already empty
 apple wasn't found
 apple wasn't found
+apple wasn't found
+Dictionary is empty
+Dictionary is empty

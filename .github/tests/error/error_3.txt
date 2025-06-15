@@ -1,1 +1,2 @@
 File wasn't found/open. Creating empty dictionary
+programm wasn't found

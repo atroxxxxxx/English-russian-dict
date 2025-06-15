@@ -6,4 +6,12 @@ REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word transl
 CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
+programm added
+programm: ПО, программа, программное_обеспечение, софт;
+Translates was deleted
+programm: программа, программное_обеспечение, софт;
+Dictionary has been completely cleaned up
 <INVALID COMMAND\FORMAT>
+apple added
+Translate(s) was added to word apple
+apple: плод_яблони, яблоко, яблочный;
