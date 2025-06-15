@@ -9,7 +9,7 @@ src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::insert(const
 {
 	const_iterator hint = end();
 	hint = lower_bound(get_key(value));
-	if ((hint == end()) || !compare_(value, *hint))
+	if ((hint == end()) || compare_(value, *hint))
 	{
 		return {insert(hint, new node_type{value, true, hint.data_}), true};
 	}

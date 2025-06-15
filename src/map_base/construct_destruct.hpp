@@ -117,7 +117,7 @@ src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::copy(node_ty
 	}
 	catch (...)
 	{
-		destory(copied);
+		destroy(copied);
 		throw;
 	}
 	return copied;

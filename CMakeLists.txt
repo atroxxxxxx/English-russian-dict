@@ -19,6 +19,7 @@ add_executable(run
 add_executable(test_exec
 	test_main.cpp
 	test/initial_test.cpp
+	test/map/construct.cpp
 )
 target_include_directories(test_exec
 	PRIVATE
