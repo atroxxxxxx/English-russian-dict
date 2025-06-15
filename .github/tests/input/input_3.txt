@@ -1,1 +1,9 @@
-hello world!
+ADD WORD programm: программа, ПО, программное_обеспечение, софт;
+PRINT DICT
+REMOVE TRANSLATE programm: ПО;
+PRINT DICT
+CLEAR
+ADD TRANSLATE programm: ПО;
+ADD WORD apple: яблоко, плод_яблони;
+ADD TRANSLATE apple: яблочный;
+PRINT DICT

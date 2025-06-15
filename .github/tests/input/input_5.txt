@@ -1,0 +1,13 @@
+PRINT DICT
+ADD TRANSLATE apple: яблоко;
+ADD WORD apple: яблоко;
+REMOVE WORD apple
+REMOVE WORD apple
+REMOVE TRANSLATE apple: яблоко;
+PRINT WORD apple
+ADD WORD apple: яблоко, плод_яблони;
+PRINT DICT
+ADD TRANSLATE apple: яблоневый, яблочный_сок;
+PRINT WORD apple
+CLEAR
+PRINT DICT

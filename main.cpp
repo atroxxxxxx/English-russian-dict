@@ -1,39 +1,37 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
-#include <cstring>
-#include "src/initial_test.hpp"
-#include "map.hpp"
-#include "set.hpp"
-
 #include <map>
-#include <set>
+#include <iterator>
+#include <fstream>
 
-class Dict
-{
-public:
-	bool add();
-	bool remove();
-	bool search();
-	bool size();
-	bool clear();
-	bool clear_translate();
-	bool exit();
-private:
-	std::map< std::string, std::set< std::string > > data_;
-};
+#include "src/parser.hpp"
+#include "src/processor.hpp"
+#include "src/dict.hpp"
 
 int main(int argc, char** argv)
 {
-	return 0;
-	if (argc <= 1)
+	src::Dictionary dict;
+	src::MainProcessor processor;
+	src::Parser< src::MainProcessor >::map_type comands = {
+		{"HELP", &src::MainProcessor::help},
+		{"ADD", &src::MainProcessor::add},
+		{"REMOVE", &src::MainProcessor::remove},
+		{"CLEAR", &src::MainProcessor::clear},
+		{"PRINT", &src::MainProcessor::print}
+	};
+	src::Parser< src::MainProcessor > parser({}, {std::cin, std::cout, std::cerr, dict},
+			std::move(comands));
+	if (!processor.init(parser.context, argc, argv))
 	{
-		std::cerr << "File wasn't found\n";
-		return 1;
+		std::cerr << "File wasn't found/open. Creating empty dictionary\n";
 	}
-	std::cout << "File was found\n";
-	if (std::strcmp(argv[1], "../.github/tests/input/input_3.txt") == 0)
+	else
 	{
-		std::cout << "It was a plan\n";
+		std::cout << "The file was successfully read. A dictionary was created from: " <<
+				parser.context.dict.dictionary.size() << " words\n";
 	}
-	return 0;
+	processor.help(parser.context);
+	while (parser.run())
+	{}
 }

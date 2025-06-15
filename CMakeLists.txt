@@ -15,6 +15,9 @@ include_directories(src test)
 
 add_executable(run
 	main.cpp
+	src/main-logic/parser.cpp
+	src/main-logic/processor.cpp
+	src/main-logic/dict.cpp
 )
 add_executable(test_exec
 	test_main.cpp

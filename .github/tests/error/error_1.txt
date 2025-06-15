@@ -1,1 +1,1 @@
-File wasn't found
+File wasn't found/open. Creating empty dictionary

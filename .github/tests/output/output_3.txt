@@ -1,2 +1,17 @@
-File was found
-It was a plan
+HELP — help menu
+ADD WORD [word]: [translate], [translate], [...], [translate];— add new word
+ADD TRANSLATE [word in dictionary]: [translate], [...], [translate]; — add translate(s) to word
+REMOVE WORD [word] — remove word from dictionary
+REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word translate(s) from dictionary
+CLEAR — clear dictionary
+PRINT DICT — print dictionary
+PRINT WORD [word] — print word and translates from dictionary
+programm added
+programm: ПО, программа, программное_обеспечение, софт;
+Translates was deleted
+programm: программа, программное_обеспечение, софт;
+Dictionary has been completely cleaned up
+<INVALID COMMAND\FORMAT>
+apple added
+Translate(s) was added to word apple
+apple: плод_яблони, яблоко, яблочный;

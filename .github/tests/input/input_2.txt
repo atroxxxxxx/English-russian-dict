@@ -1,0 +1,5 @@
+PRINT DICT
+CLEAR
+ADD WORD apple яблоко
+REMOVE WORD apple
+REMOVE TRANSLATE apple: яблоко;
