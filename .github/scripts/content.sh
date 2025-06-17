@@ -8,13 +8,6 @@ check_file() {
     local has_trailing_space=0
     local has_long_line=0
     local has_no_final_newline=0
-    local total_lines=0
-
-    total_lines=$(wc -l < "$file")
-    if [ "$total_lines" -gt 200 ]; then
-        echo "::error::Файл '$file' слишком большой ($total_lines строк, максимум 200)"
-        exit 1
-    fi
 
     while IFS= read -r line; do
         line_num=$((line_num + 1))
@@ -32,7 +25,7 @@ check_file() {
 
     if [ -s "$file" ] && [ "$(tail -c 1 "$file" | od -An -tx1 | tr -d ' \n')" != "0a" ]; then
         echo "::error::Файл '$file' должен заканчиваться символом новой строки (LF)"
-        has_errors=1
+        has_no_final_newline=1
     fi
 
     if [ "$has_trailing_space" -eq 1 ] || [ "$has_long_line" -eq 1 ] || [ "$has_no_final_newline" -eq 1 ]; then

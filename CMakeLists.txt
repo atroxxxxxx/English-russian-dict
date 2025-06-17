@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.23 FATAL_ERROR)
 project(English_russian_dict)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "-Wall -pedantic -Werror")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -21,6 +22,8 @@ add_executable(run
 add_executable(test_exec
 	test_main.cpp
 	test/initial_test.cpp
+	test/map.cpp
+	test/set.cpp
 )
 target_include_directories(test_exec
 	PRIVATE

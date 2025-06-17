@@ -1,5 +1,5 @@
 HELP — help menu
-ADD WORD [word]: [translate], [translate], [...], [translate];— add new word
+ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word
 ADD TRANSLATE [word in dictionary]: [translate], [...], [translate]; — add translate(s) to word
 REMOVE WORD [word] — remove word from dictionary
 REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word translate(s) from dictionary

@@ -31,7 +31,7 @@ bool src::MainProcessor::init(Context& context, int argc, char** argv)
 bool src::MainProcessor::help(Context& context)
 {
 	context.output << "HELP — help menu\n";
-	context.output << "ADD WORD [word]: [translate], [translate], [...], [translate];— add new word\n";
+	context.output << "ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word\n";
 	context.output << "ADD TRANSLATE [word in dictionary]: [translate], [...], [translate];"
 			<<" — add translate(s) to word\n";
 	context.output << "REMOVE WORD [word] — remove word from dictionary\n";

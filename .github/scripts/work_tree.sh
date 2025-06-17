@@ -32,5 +32,5 @@ check_dir_content() {
 check_dir_content "src"
 check_dir_content "test"
 
-echo "Всё в порядке, структура проекта не вызывает отвращения."
+echo "Всё в порядке, структура проекта в норме."
 exit 0
