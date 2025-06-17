@@ -2,11 +2,11 @@
 #define PARSER_HPP
 
 #include <iostream>
-#include <map>
-#include <set>
 #include <limits>
 #include <string>
 
+#include "map.hpp"
+#include "set.hpp"
 #include "dict.hpp"
 
 namespace src
@@ -27,7 +27,7 @@ namespace src
     using processor = Processor;
     using call_signature = bool(processor::*)(Context&);
     using num_call_signature = bool(processor::*)(Context&, size_t);
-    using map_type = std::map< std::string, call_signature >;
+    using map_type = src::Map< std::string, call_signature >;
 
     Context context;
 

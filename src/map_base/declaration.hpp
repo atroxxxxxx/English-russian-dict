@@ -55,6 +55,9 @@ namespace src
 			const_reverse_iterator rend() const noexcept;
 			const_reverse_iterator crend() const noexcept;
 
+			map_node_t< value_type >* root() const noexcept;
+			size_type black_height(const_iterator iter) const noexcept;
+
 			bool empty() const noexcept;
 			size_type size() const noexcept;
 
@@ -70,12 +73,10 @@ namespace src
 			void swap(MapBase& rhs);
 
 			template< class... Args >
-			iterator emplace_hint(const_iterator hint, Args&&... args);
-			template< class... Args >
 			iterator emplace(Args&&... args);
 			Pair< iterator, bool > insert(const value_type& value);
 			Pair< iterator, bool > insert(value_type&& value);
-			iterator erase(const_iterator iter);
+			iterator erase(const_iterator pos);
 			size_type erase(const key_type& key);
 		private:
 			using node_type = map_node_t< value_type >;

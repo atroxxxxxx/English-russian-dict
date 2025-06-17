@@ -2,21 +2,22 @@
 #define DICT_HPP
 
 #include <iosfwd>
-#include <map>
-#include <set>
 #include <string>
+
+#include "map.hpp"
+#include "set.hpp"
 
 namespace src
 {
 	struct Translates
 	{
-		std::set< std::string > translates;
+		src::Set< std::string > translates;
 	};
 	std::istream& operator>>(std::istream& in, Translates& translates);
 	std::ostream& operator<<(std::ostream& out, const Translates& translates);
 	struct Dictionary
 	{
-		std::map< std::string, Translates > dictionary;
+		src::Map< std::string, Translates > dictionary;
 	};
 	std::istream& operator>>(std::istream& in, Dictionary& dictionary);
 	std::ostream& operator<<(std::ostream& out, const Dictionary& dictionary);

@@ -5,31 +5,55 @@
 
 template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
 typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::iterator
-src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::erase(const_iterator iter)
+src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::erase(const_iterator pos)
 {
-	if (iter == end())
+	if (pos == end())
 	{
 		return end();
 	}
-	node_type* toDelete = iter.data_;
-	bool deletedRed = toDelete->isRed_;
-	node_type* replacement = nullptr;
-	node_type* successor = nullptr;
-	if (toDelete->left_ && toDelete->right_)
+	iterator result = {pos.data_, max_};
+	++result;
+	if (pos == begin())
 	{
-		successor = toDelete->right_;
-		while (successor->left_)
-		{
-			successor = successor->left_;
-		}
-		toDelete->value_ = successor->value_;
-		toDelete = successor;
-		deletedRed = toDelete->isRed_;
+		min_ = (++begin()).data_;
 	}
-	replacement = toDelete->left_ ? toDelete->left_ : toDelete->right_;
-	if (replacement)
+	if (pos.data_ == max_)
 	{
-		replacement->parent_ = toDelete->parent_;
+		max_ = (----end()).data_;
+	}
+
+	node_type* toDelete = pos.data_;
+	node_type* replacement = nullptr;
+	node_type* child = nullptr;
+
+	if ((toDelete->left_ != nullptr) && (toDelete->right_ != nullptr))
+	{
+		replacement = toDelete->right_;
+		while (replacement->left_)
+		{
+			replacement = replacement->left_;
+		}
+		child = replacement->right_;
+	}
+	else
+	{
+		replacement = (toDelete->left_ != nullptr) ? toDelete->left_ : toDelete->right_;
+		child = replacement;
+	}
+	if ((replacement != nullptr) && (replacement->parent_ != toDelete))
+	{
+		if (replacement == replacement->parent_->left_)
+		{
+			replacement->parent_->left_ = child;
+		}
+		else
+		{
+			replacement->parent_->right_ = child;
+		}
+		if (child != nullptr)
+		{
+			child->parent_ = replacement->parent_;
+		}
 	}
 	if (!toDelete->parent_)
 	{
@@ -43,138 +67,117 @@ src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::erase(const_
 	{
 		toDelete->parent_->right_ = replacement;
 	}
-	if (toDelete == min_)
+	if (replacement != nullptr)
 	{
-		min_ = replacement ? replacement : toDelete->parent_;
-		while (min_ && min_->left_)
+		replacement->parent_ = toDelete->parent_;
+		if (toDelete->left_ != replacement)
 		{
-			min_ = min_->left_;
-		}
-	}
-	if (toDelete == max_)
-	{
-		max_ = replacement ? replacement : toDelete->parent_;
-		while (max_ && max_->right_)
-		{
-			max_ = max_->right_;
-		}
-	}
-	if (!deletedRed)
-	{
-		node_type* fixNodeParent = toDelete->parent_;
-		node_type* current = replacement;
-		while (current != root_ && (!current || !current->isRed_))
-		{
-			if (current == (fixNodeParent ? fixNodeParent->left_ : nullptr))
+			replacement->left_ = toDelete->left_;
+			if (replacement->left_ != nullptr)
 			{
-				node_type* brother = fixNodeParent ? fixNodeParent->right_ : nullptr;
-				if (brother && brother->isRed_)
+				replacement->left_->parent_ = replacement;
+			}
+		}
+		if (toDelete->right_ != replacement)
+		{
+			replacement->right_ = toDelete->right_;
+			if (replacement->right_ != nullptr)
+			{
+				replacement->right_->parent_ = replacement;
+			}
+		}
+		replacement->isRed_ = toDelete->isRed_;
+	}
+	if (!toDelete->isRed_)
+	{
+		node_type* current = ((child != nullptr) ? child : toDelete->parent_);
+		while ((current != nullptr) && (current != root_) && !current->isRed_)
+		{
+			node_type* parent = current->parent_;
+			if (current == parent->left_)
+			{
+				node_type* sibling = parent->right_;
+				if (sibling->isRed_)
 				{
-					brother->isRed_ = false;
-					fixNodeParent->isRed_ = true;
-					rotate_left(fixNodeParent);
-					brother = fixNodeParent->right_;
+					sibling->isRed_ = false;
+					parent->isRed_ = true;
+					rotate_left(parent);
+					sibling = parent->right_;
 				}
-				if ((!brother->left_ || !brother->left_->isRed_) &&
-						(!brother->right_ || !brother->right_->isRed_))
+				if (((sibling->left_ == nullptr) || (!sibling->left_->isRed_))
+						&& ((sibling->right_ == nullptr) || (!sibling->right_->isRed_)))
 				{
-					if (brother)
-					{
-						brother->isRed_ = true;
-					}
-					current = fixNodeParent;
-					fixNodeParent = current ? current->parent_ : nullptr;
+					sibling->isRed_ = true;
+					current = parent;
 				}
 				else
 				{
-					if (!brother->right_ || !brother->right_->isRed_)
+					if ((sibling->right_ == nullptr) || (!sibling->right_->isRed_))
 					{
-						if (brother->left_)
+						if (sibling->left_ != nullptr)
 						{
-							brother->left_->isRed_ = false;
+							sibling->left_->isRed_ = false;
 						}
-						if (brother)
-						{
-							brother->isRed_ = true;
-							rotate_right(brother);
-							brother = fixNodeParent ? fixNodeParent->right_ : nullptr;
-						}
+						sibling->isRed_ = true;
+						rotate_right(sibling);
+						sibling = parent->right_;
 					}
-					if (brother)
+					sibling->isRed_ = parent->isRed_;
+					parent->isRed_ = false;
+					if (sibling->right_ != nullptr)
 					{
-						brother->isRed_ = fixNodeParent ? fixNodeParent->isRed_ : false;
-						if (brother->right_)
-						{
-							brother->right_->isRed_ = false;
-						}
+						sibling->right_->isRed_ = false;
 					}
-					if (fixNodeParent)
-					{
-						fixNodeParent->isRed_ = false;
-						rotate_left(fixNodeParent);
-					}
+					rotate_left(parent);
 					current = root_;
 				}
 			}
 			else
 			{
-				node_type* brother = fixNodeParent ? fixNodeParent->left_ : nullptr;
-				if (brother && brother->isRed_)
+				node_type* sibling = parent->left_;
+				if (sibling->isRed_)
 				{
-					brother->isRed_ = false;
-					fixNodeParent->isRed_ = true;
-					rotate_right(fixNodeParent);
-					brother = fixNodeParent->left_;
+					sibling->isRed_ = false;
+					parent->isRed_ = true;
+					rotate_right(parent);
+					sibling = parent->left_;
 				}
-				if ((!brother->left_ || !brother->left_->isRed_) &&
-				    (!brother->right_ || !brother->right_->isRed_))
+				if (((sibling->left_ == nullptr) || (!sibling->left_->isRed_))
+				    && ((sibling->right_ == nullptr) || (!sibling->right_->isRed_)))
 				{
-					if (brother)
-					{
-						brother->isRed_ = true;
-					}
-					current = fixNodeParent;
-					fixNodeParent = current ? current->parent_ : nullptr;
+					sibling->isRed_ = true;
+					current = parent;
 				}
 				else
 				{
-					if (!brother->left_ || !brother->left_->isRed_)
+					if ((sibling->left_ == nullptr) || (!sibling->left_->isRed_))
 					{
-						if (brother->right_)
+						if (sibling->right_ != nullptr)
 						{
-							brother->right_->isRed_ = false;
+							sibling->right_->isRed_ = false;
 						}
-						if (brother)
-						{
-							brother->isRed_ = true;
-							rotate_left(brother);
-							brother = fixNodeParent ? fixNodeParent->left_ : nullptr;
-						}
+						sibling->isRed_ = true;
+						rotate_left(sibling);
+						sibling = parent->left_;
 					}
-					if (brother)
+					sibling->isRed_ = parent->isRed_;
+					parent->isRed_ = false;
+					if (sibling->left_ != nullptr)
 					{
-						brother->isRed_ = fixNodeParent ? fixNodeParent->isRed_ : false;
-						if (brother->left_)
-						{
-							brother->left_->isRed_ = false;
-						}
+						sibling->left_->isRed_ = false;
 					}
-					if (fixNodeParent)
-					{
-						fixNodeParent->isRed_ = false;
-						rotate_right(fixNodeParent);
-					}
+					rotate_right(parent);
 					current = root_;
 				}
 			}
 		}
-		if (current)
+		if (current != nullptr)
 		{
 			current->isRed_ = false;
 		}
 	}
-	iterator result = {(--iter).data_, max_};
 	delete toDelete;
+	--size_;
 	return result;
 }
 

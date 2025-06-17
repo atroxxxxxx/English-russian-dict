@@ -24,24 +24,21 @@ void src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::swap(Ma
 template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
 template< class... Args >
 typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::iterator
-src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::emplace_hint(const_iterator hint, Args&&... args)
-{
-	return insert(hint, new node_type{{args...}, true, hint.data_});
-}
-template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
-template< class... Args >
-typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::iterator
 src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::emplace(Args&&... args)
 {
-	node_type* current = new node_type{{args...}, true};
+	node_type* current = new node_type{{std::forward< Args >(args)...}, true};
 	key_type& key = get_key(current->value_);
 	const_iterator hint = end();
 	try
 	{
 		hint = lower_bound(key);
-		if ((hint != end()) && !compare_(get_key(hint.data_->value_), key))
+		if ((hint != end()) && compare_(key, get_key(hint.data_->value_)))
 		{
-			current->parent_ = *hint;
+			current->parent_ = hint.data_;
+			return insert(hint, current);
+		}
+		else if ((hint == end()) && empty())
+		{
 			return insert(hint, current);
 		}
 	}

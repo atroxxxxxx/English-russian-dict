@@ -1,16 +1,16 @@
 #ifndef SET_HPP
 #define SET_HPP
 
-#include "map_base/declaration.hpp"
+#include "map_base.hpp"
 #include <functional>
 
 namespace src
 {
 	template< class Key, class Compare = std::less<> >
-	class Set: public details::MapBase< Key, void, Compare, Key, Compare >
+	class Set: public details::MapBase< const Key, void, Compare, const Key, Compare >
 	{
 	public:
-		using base = details::MapBase< Key, void, Compare, Key, Compare >;
+		using base = details::MapBase< const Key, void, Compare, const Key, Compare >;
 		using key_type = typename base::key_type;
 		using value_type = typename base::value_type;
 		using size_type = typename base::size_type;
@@ -21,6 +21,21 @@ namespace src
 		using const_iterator = typename base::const_iterator;
 		using reverse_iterator = typename base::reverse_iterator;
 		using const_reverse_iterator = typename base::const_reverse_iterator;
+
+		Set() noexcept(std::is_nothrow_default_constructible< value_compare >::value): base()
+		{}
+		Set(const key_compare& compare): base(compare)
+		{}
+		Set(const Set& rhs): base(rhs)
+		{}
+		Set(Set&& rhs) noexcept(std::is_nothrow_default_constructible< value_compare >::value): base(std::move(rhs))
+		{}
+		template< class InIter >
+		Set(InIter from, InIter to, const key_compare& compare = key_compare()): base(from, to, compare)
+		{}
+		Set(std::initializer_list< value_type > list, const key_compare& compare = key_compare()): base(list, compare)
+		{}
+		using base::operator=;
 	};
 }
 
