@@ -35,7 +35,22 @@ namespace src
 		{}
 		Set(std::initializer_list< value_type > list, const key_compare& compare = key_compare()): base(list, compare)
 		{}
-		using base::operator=;
+
+		Set& operator=(const Set& rhs)
+		{
+			base::operator=(rhs);
+			return *this;
+		}
+		Set& operator=(Set&& rhs) noexcept(std::is_nothrow_default_constructible< value_compare >::value)
+		{
+			base::operator=(std::move(rhs));
+			return *this;
+		}
+		Set& operator=(std::initializer_list< value_type > list)
+		{
+			base::operator=(list);
+			return *this;
+		}
 	};
 }
 

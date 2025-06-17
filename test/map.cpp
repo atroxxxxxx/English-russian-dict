@@ -17,38 +17,6 @@ struct ACompare
 	}
 };
 
-#include <cassert>
-template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
-typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::size_type
-src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::black_height(const_iterator iter) const noexcept
-{
-	if (iter.data_ == nullptr)
-	{
-		return 0;
-	}
-	size_type left = black_height({iter.data_->left_, max_});
-	size_type right = black_height({iter.data_->right_, max_});
-	assert(left == right);
-	return left + !iter.data_->isRed_;
-}
-template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
-src::details::map_node_t< typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::value_type >*
-src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::root() const noexcept
-{
-	return root_;
-}
-void print(src::details::map_node_t< src::Pair< const int, char > >* node, size_t level)
-{
-	if (node == nullptr)
-	{
-		return;
-	}
-	print(node->left_, level + 1);
-	std::cout << std::string("\t\t\t\t", level) << node->value_.first << ' ' << node->value_.second
-	          << ": " << (node->isRed_ ? 'R' : 'B') << '\n';
-	print(node->right_, level + 1);
-}
-
 TEST(map_construct, default)
 {
 	src::Map< int, char > map;

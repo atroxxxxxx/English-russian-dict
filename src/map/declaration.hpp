@@ -45,7 +45,21 @@ namespace src
 		Map(std::initializer_list< value_type > list, const key_compare& compare = key_compare()): base(list, compare)
 		{}
 
-		using base::operator=;
+		Map& operator=(const Map& rhs)
+		{
+			base::operator=(rhs);
+			return *this;
+		}
+		Map& operator=(Map&& rhs) noexcept(std::is_nothrow_default_constructible< value_compare >::value)
+		{
+			base::operator=(std::move(rhs));
+			return *this;
+		}
+		Map& operator=(std::initializer_list< value_type > list)
+		{
+			base::operator=(list);
+			return *this;
+		}
 
 		mapped_type& at(const key_type& key);
 		const mapped_type& at(const key_type& key) const;

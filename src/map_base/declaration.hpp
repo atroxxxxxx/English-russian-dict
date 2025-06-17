@@ -55,9 +55,6 @@ namespace src
 			const_reverse_iterator rend() const noexcept;
 			const_reverse_iterator crend() const noexcept;
 
-			map_node_t< value_type >* root() const noexcept;
-			size_type black_height(const_iterator iter) const noexcept;
-
 			bool empty() const noexcept;
 			size_type size() const noexcept;
 

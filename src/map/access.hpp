@@ -28,7 +28,7 @@ src::Map< Key, Mapped, Compare >::operator[](const key_type& key)
 	iterator current = this->find(key);
 	if (current == this->end())
 	{
-		return this->insert({key, {}}).second;
+		return (this->insert({key, {}}).first)->second;
 	}
 	return current->second;
 }

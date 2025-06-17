@@ -22,7 +22,8 @@ src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::insert(value
 	const_iterator hint = lower_bound(get_key(value));
 	if ((hint == end()) || compare_(value, *hint))
 	{
-		return {insert(hint, new node_type{std::move(value), true, hint.data_}), true};
+		node_type* node = new node_type{std::move(value), true, hint.data_};
+		return {insert(hint, node), true};
 	}
 	return {end(), false};
 }
