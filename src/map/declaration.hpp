@@ -65,6 +65,9 @@ namespace src
 		const mapped_type& at(const key_type& key) const;
 		mapped_type& operator[](const key_type& key);
 		mapped_type& operator[](key_type&& key);
+	private:
+		using node_type = typename base::node_type;
+		key_compare comp_;
 	};
 }
 
