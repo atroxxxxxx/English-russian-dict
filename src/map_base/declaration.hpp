@@ -75,8 +75,11 @@ namespace src
 			Pair< iterator, bool > insert(value_type&& value);
 			iterator erase(const_iterator pos);
 			size_type erase(const key_type& key);
-		private:
+		protected:
 			using node_type = map_node_t< value_type >;
+			node_type* get_data(iterator iter);
+			iterator insert(const_iterator hint, node_type* node);
+		private:
 			value_compare compare_;
 			node_type* root_;
 			size_type size_;
@@ -100,7 +103,6 @@ namespace src
 
 			const_iterator lower_bound_impl(const key_type& key) const;
 			const_iterator upper_bound_impl(const key_type& key) const;
-			iterator insert(const_iterator hint, node_type* node);
 
 			void rotate_left(node_type* node) noexcept;
 			void rotate_right(node_type* node) noexcept;

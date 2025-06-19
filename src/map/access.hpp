@@ -25,23 +25,24 @@ template< class Key, class Mapped, class Compare >
 typename src::Map< Key, Mapped, Compare >::mapped_type&
 src::Map< Key, Mapped, Compare >::operator[](const key_type& key)
 {
-	iterator current = this->find(key);
-	if (current == this->end())
+	iterator hint = this->end();
+	hint = this->lower_bound(key);
+	if ((hint == this->end()) || comp_(key, hint->first))
 	{
-		return (this->insert({key, {}}).first)->second;
+		return this->insert(hint, new node_type{{key, {}}, true, this->get_data(hint)})->second;
 	}
-	return current->second;
+	return hint->second;
 }
 template< class Key, class Mapped, class Compare >
 typename src::Map< Key, Mapped, Compare >::mapped_type&
 src::Map< Key, Mapped, Compare >::operator[](key_type&& key)
 {
-	iterator current = this->find(key);
-	if (current == this->end())
+	iterator hint = this->end();
+	hint = this->lower_bound(key);
+	if ((hint == this->end()) || comp_(key, hint->first))
 	{
-		return (this->insert({std::move(key), {}}).first)->second;
+		return this->insert(hint, new node_type{{std::move(key), {}}, true, this->get_data(hint)})->second;
 	}
-	return current->second;
+	return hint->second;
 }
-
 #endif

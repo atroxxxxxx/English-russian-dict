@@ -170,5 +170,16 @@ src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::upper_bound_
 		}
 	}
 }
+template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
+typename src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::node_type*
+src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::get_data(iterator iter)
+{
+	if (iter == end())
+	{
+		return nullptr;
+	}
+	return iter.data_;
+}
+
 
 #endif
