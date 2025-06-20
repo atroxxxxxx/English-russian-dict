@@ -6,4 +6,3 @@ REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word transl
 CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
-<INVALID COMMAND\FORMAT>

@@ -32,9 +32,10 @@ sun: солнечный_шар, солнце;
 tree: дерево, древесное_растение, ствол_растения;
 valley: долина, низина;
 water: H2O, вода, водичка, жидкость;
+Total: 25 words
 water was removed
-<INVALID COMMAND\FORMAT>
 air added
 Dictionary has been completely cleaned up
 air added
 air: атмосфера, воздух;
+Total: 1 words

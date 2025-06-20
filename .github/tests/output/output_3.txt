@@ -8,10 +8,12 @@ PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
 programm added
 programm: ПО, программа, программное_обеспечение, софт;
-Translates was deleted
+Total: 1 words
+1 translate(s) was deleted
 programm: программа, программное_обеспечение, софт;
+Total: 1 words
 Dictionary has been completely cleaned up
-<INVALID COMMAND\FORMAT>
 apple added
-Translate(s) was added to word apple
+1 translate(s) was added to word apple
 apple: плод_яблони, яблоко, яблочный;
+Total: 1 words
