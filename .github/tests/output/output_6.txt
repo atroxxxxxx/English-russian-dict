@@ -17,9 +17,9 @@ PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
 sunrise added
 sunrise: восход, заря, утренний_свет;
-Translate(s) was added to word apple
+3 translate(s) was added to word apple
 apple: сладкое_яблоко, яблоко, яблоневый, яблоня_плод, яблочный_пирог, яблочный_сок;
-Translates was deleted
+2 translate(s) was deleted
 apple: яблоко, яблоня_плод, яблочный_пирог, яблочный_сок;
 sunrise was removed
 Dictionary has been completely cleaned up

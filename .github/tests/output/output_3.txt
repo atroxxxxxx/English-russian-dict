@@ -11,7 +11,6 @@ programm: ПО, программа, программное_обеспечени�
 Translates was deleted
 programm: программа, программное_обеспечение, софт;
 Dictionary has been completely cleaned up
-<INVALID COMMAND\FORMAT>
 apple added
 Translate(s) was added to word apple
 apple: плод_яблони, яблоко, яблочный;
