@@ -11,6 +11,7 @@ programm: ПО, программа, программное_обеспечени�
 Total: 1 words
 1 translate(s) was deleted
 programm: программа, программное_обеспечение, софт;
+Total: 1 words
 Dictionary has been completely cleaned up
 apple added
 1 translate(s) was added to word apple
