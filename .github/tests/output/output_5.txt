@@ -10,6 +10,7 @@ apple added
 apple was removed
 apple added
 apple: плод_яблони, яблоко;
+Total: 1 words
 2 translate(s) was added to word apple
 apple: плод_яблони, яблоко, яблоневый, яблочный_сок;
 Dictionary has been completely cleaned up

@@ -1,5 +1,6 @@
 File wasn't found/open. Creating empty dictionary
 Dictionary is empty
 Dictionary is already empty
+Invalid command\input
 apple wasn't found
 apple wasn't found

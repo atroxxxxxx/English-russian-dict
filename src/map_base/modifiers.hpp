@@ -8,6 +8,7 @@ void src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::clear()
 {
 	destroy(root_);
 	root_ = nullptr;
+	size_ = 0;
 }
 template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
 void src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >::swap(MapBase& rhs)
