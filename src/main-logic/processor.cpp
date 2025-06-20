@@ -98,16 +98,26 @@ bool src::AddProcessor::add_translate(Context& context)
 	}
 	word.pop_back();
 	auto it = context.dict.dictionary.find(word);
-	if ((it != context.dict.dictionary.end()) && (context.input >> it->second))
+	if (it != context.dict.dictionary.end())
 	{
-		context.output << "Translate(s) was added to word " << word << '\n';
-		return true;
+		size_t sizeBefore = it->second.translates.size();
+		if (context.input >> it->second)
+		{
+			context.output << (it->second.translates.size() - sizeBefore)
+					<< " translate(s) was added to word " << word << '\n';
+		}
+		else
+		{
+			return false;
+		}
 	}
-	else if (it == context.dict.dictionary.end())
+	else
 	{
+		context.input.clear(context.input.rdstate() & ~std::ios::failbit);
+		context.input.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
 		context.error << word << " wasn't found\n";
 	}
-	return false;
+	return true;
 }
 
 bool src::RemoveProcessor::remove_word(Context& context)
@@ -145,11 +155,12 @@ bool src::RemoveProcessor::remove_translate(Context& context)
 		context.error << word << " wasn't found\n";
 		return true;
 	}
+	size_t sizeBefore = it->second.translates.size();
 	for (auto i: translates.translates)
 	{
 		it->second.translates.erase(i);
 	}
-	context.output << "Translates was deleted\n";
+	context.output << (sizeBefore - it->second.translates.size()) << " translate(s) was deleted\n";
 	return true;
 }
 
@@ -164,6 +175,7 @@ bool src::PrintProcessor::print_dict(Context& context)
 	{
 		context.output << i.first << ": " << i.second << '\n';
 	}
+	context.output << "Total: " << context.dict.dictionary.size() << " words\n";
 	return true;
 }
 bool src::PrintProcessor::print_word(Context& context)
@@ -183,9 +195,11 @@ bool src::PrintProcessor::print_word(Context& context)
 	if (it == context.dict.dictionary.end())
 	{
 		context.error << word << " wasn't found\n";
-		return true;
 	}
-	context.output << word << ": " << it->second << '\n';
+	else
+	{
+		context.output << word << ": " << it->second << '\n';
+	}
 	return true;
 }
 
@@ -194,9 +208,11 @@ bool src::MainProcessor::clear(Context& context)
 	if (context.dict.dictionary.empty())
 	{
 		context.error << "Dictionary is already empty\n";
-		return true;
 	}
-	context.dict.dictionary.clear();
-	context.output << "Dictionary has been completely cleaned up\n";
+	else
+	{
+		context.dict.dictionary.clear();
+		context.output << "Dictionary has been completely cleaned up\n";
+	}
 	return true;
 }
