@@ -7,6 +7,7 @@ REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word transl
 CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
+SAVE — save dictionary
 HELP — help menu
 ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word
 ADD TRANSLATE [word in dictionary]: [translate], [...], [translate]; — add translate(s) to word
@@ -18,10 +19,10 @@ PRINT WORD [word] — print word and translates from dictionary
 SAVE — save dictionary
 CTRL + D on Linux or CTRL + Z on Windows to close dictionary
 sunrise added
-sunrise: восход, заря;
-1 translate(s) was added to word apple
-apple: яблоко, яблоневый;
-1 translate(s) was deleted
-apple: яблоко;
+sunrise: восход, заря, утренний_свет;
+3 translate(s) was added to word apple
+apple: сладкое_яблоко, яблоко, яблоневый, яблоня_плод, яблочный_пирог, яблочный_сок;
+2 translate(s) was deleted
+apple: яблоко, яблоня_плод, яблочный_пирог, яблочный_сок;
 sunrise was removed
 Dictionary has been completely cleaned up

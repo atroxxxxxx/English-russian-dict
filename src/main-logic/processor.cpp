@@ -33,7 +33,7 @@ bool src::MainProcessor::help(Context& context)
 	context.output << L"ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word\n";
 	context.output << L"ADD TRANSLATE [word in dictionary]: [translate], [...], [translate];"
 			<< L" — add translate(s) to word\n";
-	context.output << L"LREMOVE WORD [word] — remove word from dictionary\n";
+	context.output << L"REMOVE WORD [word] — remove word from dictionary\n";
 	context.output << L"REMOVE TRANSLATE [word]: [translate], [...], [translate];"
 			<< L" — remove word translate(s) from dictionary\n";
 	context.output << L"CLEAR — clear dictionary\n";
