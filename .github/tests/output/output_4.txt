@@ -7,6 +7,8 @@ REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word transl
 CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
+SAVE — save dictionary
+CTRL + D on Linux or CTRL + Z on Windows to close dictionary
 apple: сладкое_яблоко, яблоко, яблоня_плод;
 banana: банан, желтый_плод;
 beach: береговая_полоса, пляж;
@@ -31,7 +33,7 @@ star: звезда, светило;
 sun: солнечный_шар, солнце;
 tree: дерево, древесное_растение, ствол_растения;
 valley: долина, низина;
-water: H2O, вода, водичка, жидкость;
+water: вода, водичка, жидкость;
 Total: 25 words
 water was removed
 air added

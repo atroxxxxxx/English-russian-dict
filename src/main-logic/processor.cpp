@@ -1,11 +1,9 @@
 #include "processor.hpp"
 
-#include <algorithm>
-#include <iterator>
 #include <fstream>
-#include <functional>
 #include <numeric>
 #include <limits>
+#include <locale>
 #include "parser.hpp"
 
 bool src::MainProcessor::init(Context& context, int argc, char** argv)
@@ -14,11 +12,12 @@ bool src::MainProcessor::init(Context& context, int argc, char** argv)
 	{
 		return false;
 	}
-	std::ifstream file(argv[1]);
+	std::wifstream file(argv[1]);
 	if (!file)
 	{
 		return false;
 	}
+	file.imbue(std::locale("en_US.UTF-8"));
 	while (file)
 	{
 		file >> context.dict;
@@ -30,23 +29,25 @@ bool src::MainProcessor::init(Context& context, int argc, char** argv)
 
 bool src::MainProcessor::help(Context& context)
 {
-	context.output << "HELP — help menu\n";
-	context.output << "ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word\n";
-	context.output << "ADD TRANSLATE [word in dictionary]: [translate], [...], [translate];"
-			<<" — add translate(s) to word\n";
-	context.output << "REMOVE WORD [word] — remove word from dictionary\n";
-	context.output << "REMOVE TRANSLATE [word]: [translate], [...], [translate]; "
-			<< "— remove word translate(s) from dictionary\n";
-	context.output << "CLEAR — clear dictionary\n";
-	context.output << "PRINT DICT — print dictionary\n";
-	context.output << "PRINT WORD [word] — print word and translates from dictionary\n";
+	context.output << L"HELP — help menu\n";
+	context.output << L"ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word\n";
+	context.output << L"ADD TRANSLATE [word in dictionary]: [translate], [...], [translate];"
+			<< L" — add translate(s) to word\n";
+	context.output << L"REMOVE WORD [word] — remove word from dictionary\n";
+	context.output << L"REMOVE TRANSLATE [word]: [translate], [...], [translate];"
+			<< L" — remove word translate(s) from dictionary\n";
+	context.output << L"CLEAR — clear dictionary\n";
+	context.output << L"PRINT DICT — print dictionary\n";
+	context.output << L"PRINT WORD [word] — print word and translates from dictionary\n";
+	context.output << L"SAVE — save dictionary\n";
+	context.output << L"CTRL + D on Linux or CTRL + Z on Windows to close dictionary\n";
 	return true;
 }
 bool src::MainProcessor::add(Context& context)
 {
 	static Parser< AddProcessor >::map_type comands = {
-		{"TRANSLATE", &AddProcessor::add_translate},
-		{"WORD", &AddProcessor::add_word},
+		{L"TRANSLATE", &AddProcessor::add_translate},
+		{L"WORD", &AddProcessor::add_word},
 	};
 	static Parser< AddProcessor > parser({}, context, std::move(comands));
 	return parser.run();
@@ -54,8 +55,8 @@ bool src::MainProcessor::add(Context& context)
 bool src::MainProcessor::remove(Context& context)
 {
 	static Parser< RemoveProcessor >::map_type comands = {
-		{"TRANSLATE", &RemoveProcessor::remove_translate},
-		{"WORD", &RemoveProcessor::remove_word},
+		{L"TRANSLATE", &RemoveProcessor::remove_translate},
+		{L"WORD", &RemoveProcessor::remove_word},
 	};
 	static Parser< RemoveProcessor > parser({}, context, std::move(comands));
 	return parser.run();
@@ -63,8 +64,8 @@ bool src::MainProcessor::remove(Context& context)
 bool src::MainProcessor::print(Context& context)
 {
 	static Parser< PrintProcessor >::map_type comands = {
-		{"WORD", &PrintProcessor::print_word},
-		{"DICT", &PrintProcessor::print_dict},
+		{L"WORD", &PrintProcessor::print_word},
+		{L"DICT", &PrintProcessor::print_dict},
 	};
 	static Parser< PrintProcessor > parser({}, context, std::move(comands));
 	return parser.run();
@@ -72,31 +73,39 @@ bool src::MainProcessor::print(Context& context)
 
 bool src::AddProcessor::add_word(Context& context)
 {
-	std::string word;
+	std::wstring word;
 	Translates translates;
 	if (!(context.input >> word >> translates) || word.back() != ':')
 	{
 		return false;
 	}
 	word.pop_back();
+	if (!parse_en_string(word))
+	{
+		return false;
+	}
 	if (!(context.dict.dictionary.insert({word, std::move(translates)}).second))
 	{
-		context.error << "Word was already added\n";
+		context.error << L"Word was already added\n";
 	}
 	else
 	{
-		context.output << word << " added\n";
+		context.output << word << L" added\n";
 	}
 	return true;
 }
 bool src::AddProcessor::add_translate(Context& context)
 {
-	std::string word;
+	std::wstring word;
 	if (!(context.input >> word) || word.back() != ':')
 	{
 		return false;
 	}
 	word.pop_back();
+	if (!parse_en_string(word))
+	{
+		return false;
+	}
 	auto it = context.dict.dictionary.find(word);
 	if (it != context.dict.dictionary.end())
 	{
@@ -104,7 +113,7 @@ bool src::AddProcessor::add_translate(Context& context)
 		if (context.input >> it->second)
 		{
 			context.output << (it->second.translates.size() - sizeBefore)
-					<< " translate(s) was added to word " << word << '\n';
+					<< L" translate(s) was added to word " << word << '\n';
 		}
 		else
 		{
@@ -115,44 +124,48 @@ bool src::AddProcessor::add_translate(Context& context)
 	{
 		context.input.clear(context.input.rdstate() & ~std::ios::failbit);
 		context.input.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
-		context.error << word << " wasn't found\n";
+		context.error << word << L" wasn't found\n";
 	}
 	return true;
 }
 
 bool src::RemoveProcessor::remove_word(Context& context)
 {
-	std::string word;
+	std::wstring word;
 	context.input >> word;
+	if (!parse_en_string(word))
+	{
+		return false;
+	}
 	auto it = context.dict.dictionary.find(word);
 	if (it == context.dict.dictionary.end())
 	{
-		context.error << word << " wasn't found\n";
+		context.error << word << L" wasn't found\n";
 	}
 	else
 	{
 		context.dict.dictionary.erase(it->first);
-		context.output << word << " was removed\n";
+		context.output << word << L" was removed\n";
 	}
 	return true;
 }
 bool src::RemoveProcessor::remove_translate(Context& context)
 {
-	std::string word;
+	std::wstring word;
 	if (!(context.input >> word) || word.back() != ':')
 	{
 		return false;
 	}
+	word.pop_back();
 	Translates translates;
-	if (!(context.input >> translates))
+	if (!parse_en_string(word) || !(context.input >> translates))
 	{
 		return false;
 	}
-	word.pop_back();
 	auto it = context.dict.dictionary.find(word);
 	if (it == context.dict.dictionary.end())
 	{
-		context.error << word << " wasn't found\n";
+		context.error << word << L" wasn't found\n";
 		return true;
 	}
 	size_t sizeBefore = it->second.translates.size();
@@ -160,7 +173,15 @@ bool src::RemoveProcessor::remove_translate(Context& context)
 	{
 		it->second.translates.erase(i);
 	}
-	context.output << (sizeBefore - it->second.translates.size()) << " translate(s) was deleted\n";
+	if (it->second.translates.empty())
+	{
+		context.output << L"0 translates to word " << word << ". This word will be delete from dictionary\n";
+		context.dict.dictionary.erase(it);
+	}
+	else
+	{
+		context.output << (sizeBefore - it->second.translates.size()) << L" translate(s) was deleted\n";
+	}
 	return true;
 }
 
@@ -168,37 +189,34 @@ bool src::PrintProcessor::print_dict(Context& context)
 {
 	if (context.dict.dictionary.empty())
 	{
-		context.error << "Dictionary is empty\n";
+		context.error << L"Dictionary is empty\n";
 		return true;
 	}
-	for (auto i: context.dict.dictionary)
-	{
-		context.output << i.first << ": " << i.second << '\n';
-	}
-	context.output << "Total: " << context.dict.dictionary.size() << " words\n";
+	context.output << context.dict;
+	context.output << L"Total: " << context.dict.dictionary.size() << " words\n";
 	return true;
 }
 bool src::PrintProcessor::print_word(Context& context)
 {
 	if (context.dict.dictionary.empty())
 	{
-		context.error << "Dictionary is empty\n";
+		context.error << L"Dictionary is empty\n";
 		context.input.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
 		return true;
 	}
-	std::string word;
-	if (!(context.input >> word))
+	std::wstring word;
+	if (!(context.input >> word) || !parse_en_string(word))
 	{
 		return false;
 	}
 	auto it = context.dict.dictionary.find(word);
 	if (it == context.dict.dictionary.end())
 	{
-		context.error << word << " wasn't found\n";
+		context.error << word << L" wasn't found\n";
 	}
 	else
 	{
-		context.output << word << ": " << it->second << '\n';
+		context.output << word << L": " << it->second << '\n';
 	}
 	return true;
 }
@@ -207,12 +225,30 @@ bool src::MainProcessor::clear(Context& context)
 {
 	if (context.dict.dictionary.empty())
 	{
-		context.error << "Dictionary is already empty\n";
+		context.error << L"Dictionary is already empty\n";
 	}
 	else
 	{
 		context.dict.dictionary.clear();
-		context.output << "Dictionary has been completely cleaned up\n";
+		context.output << L"Dictionary has been completely cleaned up\n";
+	}
+	return true;
+}
+
+bool src::MainProcessor::save(Context& context)
+{
+	if (context.dict.dictionary.empty())
+	{
+		context.error << L"Dictionary is empty, nothing to save\n";
+	}
+	else
+	{
+		std::wofstream out("dictionary.txt");
+		out.imbue(std::locale("en_US.UTF-8"));
+		out << context.dict;
+		out << L"Total: " << context.dict.dictionary.size() << L" words\n";
+		out.close();
+		context.output << L"Dictionary was successfully saved into current directory with name \"dictionary.txt\"\n";
 	}
 	return true;
 }

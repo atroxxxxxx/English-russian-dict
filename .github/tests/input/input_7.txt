@@ -1,0 +1,9 @@
+PRINT DICT
+SAVE
+CLEAR
+SAVE
+ADD WORD b*nana: банан;
+ADD WORD banana: б*нан;
+ADD WORD banana: банан, пло+;
+PRINT DICT
+PRINT WORD banana

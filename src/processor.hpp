@@ -16,6 +16,7 @@ namespace src
 		bool remove(Context& context);
 		bool clear(Context& context);
 		bool print(Context& context);
+		bool save(Context& context);
 	};
 	struct AddProcessor
 	{

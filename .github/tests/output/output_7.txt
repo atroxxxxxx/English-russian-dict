@@ -1,0 +1,28 @@
+The file was successfully read. A dictionary was created from: 10 words
+HELP — help menu
+ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word
+ADD TRANSLATE [word in dictionary]: [translate], [...], [translate]; — add translate(s) to word
+REMOVE WORD [word] — remove word from dictionary
+REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word translate(s) from dictionary
+CLEAR — clear dictionary
+PRINT DICT — print dictionary
+PRINT WORD [word] — print word and translates from dictionary
+SAVE — save dictionary
+CTRL + D on Linux or CTRL + Z on Windows to close dictionary
+dialogue: диалог;
+discourse: высказывание, дискурс;
+drama: пьеса;
+essay: сочинение, эссе;
+exposition: введение, экспозиция;
+narrative: нарратив, повествование;
+novel: повесть, роман;
+pragmatics: контекст, прагматика;
+semantics: значение, семантика;
+speech: выступление, речь;
+Total: 10 words
+Dictionary was successfully saved into current directory with name "dictionary.txt"
+Dictionary has been completely cleaned up
+banana added
+banana: банан;
+Total: 1 words
+banana: банан;

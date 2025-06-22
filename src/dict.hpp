@@ -11,16 +11,18 @@ namespace src
 {
 	struct Translates
 	{
-		src::Set< std::string > translates;
+		src::Set< std::wstring > translates;
 	};
-	std::istream& operator>>(std::istream& in, Translates& translates);
-	std::ostream& operator<<(std::ostream& out, const Translates& translates);
+	std::wistream& operator>>(std::wistream& in, Translates& translates);
+	bool parse_ru_string(std::wstring word);
+	std::wostream& operator<<(std::wostream& out, const Translates& translates);
 	struct Dictionary
 	{
-		src::Map< std::string, Translates > dictionary;
+		src::Map< std::wstring, Translates > dictionary;
 	};
-	std::istream& operator>>(std::istream& in, Dictionary& dictionary);
-	std::ostream& operator<<(std::ostream& out, const Dictionary& dictionary);
+	std::wistream& operator>>(std::wistream& in, Dictionary& dictionary);
+	bool parse_en_string(std::wstring word);
+	std::wostream& operator<<(std::wostream& out, const Dictionary& dictionary);
 }
 
 #endif
