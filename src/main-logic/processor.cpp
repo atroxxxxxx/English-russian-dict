@@ -34,12 +34,12 @@ bool src::MainProcessor::help(Context& context)
 	context.output << L"ADD TRANSLATE [word in dictionary]: [translate], [...], [translate];"
 			<< L" — add translate(s) to word\n";
 	context.output << L"LREMOVE WORD [word] — remove word from dictionary\n";
-	context.output << L"REMOVE TRANSLATE [word]: [translate], [...], [translate]; "
-			<< L"— remove word translate(s) from dictionary\n";
+	context.output << L"REMOVE TRANSLATE [word]: [translate], [...], [translate];"
+			<< L" — remove word translate(s) from dictionary\n";
 	context.output << L"CLEAR — clear dictionary\n";
 	context.output << L"PRINT DICT — print dictionary\n";
 	context.output << L"PRINT WORD [word] — print word and translates from dictionary\n";
-	context.output << L"SAVE — save dictionary \n";
+	context.output << L"SAVE — save dictionary\n";
 	context.output << L"CTRL + D on Linux or CTRL + Z on Windows to close dictionary\n";
 	return true;
 }
