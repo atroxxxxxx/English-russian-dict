@@ -1,2 +1,2 @@
-Invalid comand\input
+Invalid comand\input. Please check your input for the correct format. Words should not contain extra characters (*, _, =, etc.), as well as translations should consist of one word
 Word was already added

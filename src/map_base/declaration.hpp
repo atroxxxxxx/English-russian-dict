@@ -113,11 +113,11 @@ namespace src
 namespace std
 	{
 		template< class Key, class Mapped, class Compare, class Value, class ValueCompare >
-		void swap(src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >& lhs,
-				src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >& rhs)
-		{
-			lhs.swap(rhs);
-		}
+	void swap(src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >& lhs,
+	          src::details::MapBase< Key, Mapped, Compare, Value, ValueCompare >& rhs)
+	{
+		lhs.swap(rhs);
+	}
 }
 
 #endif

@@ -7,31 +7,31 @@ REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word transl
 CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
-apple: сладкое_яблоко, яблоко, яблоня_плод;
-banana: банан, желтый_плод;
-beach: береговая_полоса, пляж;
+apple: яблоко;
+banana: банан;
+beach: пляж;
 desert: безводье, пустыня;
 earth: земля, почва, суша;
 fire: костёр, огонь, пламя;
-flower: цветок, цветущая_растительность;
-forest: лес, лесной_массив;
+flower: цветок;
+forest: лес;
 grass: зелень, трава;
 hill: бугор, холм;
 island: остров, островок;
 lake: водоём, озеро;
-moon: луна, спутник_земли;
+moon: луна;
 mountain: вершина, гора;
-ocean: мировой_океан, океан;
+ocean: океан;
 plain: равнина, степь;
-river: водный_поток, река;
+river: река;
 rock: валун, скала;
-sea: море, морская_бездна;
-sky: воздушная_площадь, небо;
+sea: море;
+sky: небо;
 star: звезда, светило;
-sun: солнечный_шар, солнце;
-tree: дерево, древесное_растение, ствол_растения;
+sun: солнце;
+tree: дерево;
 valley: долина, низина;
-water: H2O, вода, водичка, жидкость;
+water: вода, водичка, жидкость;
 Total: 25 words
 water was removed
 air added

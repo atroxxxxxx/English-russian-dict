@@ -7,13 +7,13 @@ CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
 programm added
-programm: ПО, программа, программное_обеспечение, софт;
+programm: ПО, программа софт;
 Total: 1 words
 1 translate(s) was deleted
-programm: программа, программное_обеспечение, софт;
+programm: программа, софт;
 Total: 1 words
 Dictionary has been completely cleaned up
 apple added
 1 translate(s) was added to word apple
-apple: плод_яблони, яблоко, яблочный;
+apple: яблоко, яблочный;
 Total: 1 words

@@ -1,6 +1,6 @@
 File wasn't found/open. Creating empty dictionary
 Dictionary is empty
 Dictionary is already empty
-Invalid comand\input
+Invalid comand\input. Please check your input for the correct format. Words should not contain extra characters (*, _, =, etc.), as well as translations should consist of one word
 apple wasn't found
 apple wasn't found

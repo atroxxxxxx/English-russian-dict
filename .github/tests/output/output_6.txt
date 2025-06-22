@@ -1,4 +1,4 @@
-The file was successfully read. A dictionary was created from: 1117 words
+The file was successfully read. A dictionary was created from: 1114 words
 HELP — help menu
 ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word
 ADD TRANSLATE [word in dictionary]: [translate], [...], [translate]; — add translate(s) to word
@@ -16,10 +16,10 @@ CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
 sunrise added
-sunrise: восход, заря, утренний_свет;
-3 translate(s) was added to word apple
-apple: сладкое_яблоко, яблоко, яблоневый, яблоня_плод, яблочный_пирог, яблочный_сок;
-2 translate(s) was deleted
-apple: яблоко, яблоня_плод, яблочный_пирог, яблочный_сок;
+sunrise: восход, заря;
+1 translate(s) was added to word apple
+apple: яблоко, яблоневый;
+1 translate(s) was deleted
+apple: яблоко;
 sunrise was removed
 Dictionary has been completely cleaned up
