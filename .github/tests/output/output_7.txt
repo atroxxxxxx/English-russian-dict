@@ -2,7 +2,7 @@ The file was successfully read. A dictionary was created from: 10 words
 HELP — help menu
 ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word
 ADD TRANSLATE [word in dictionary]: [translate], [...], [translate]; — add translate(s) to word
-LREMOVE WORD [word]  remove word from dictionary
+REMOVE WORD [word]  remove word from dictionary
 REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word translate(s) from dictionary
 CLEAR — clear dictionary
 PRINT DICT — print dictionary
