@@ -9,29 +9,29 @@ PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
 SAVE — save dictionary
 CTRL + D on Linux or CTRL + Z on Windows to close dictionary
-apple: яблоко;
-banana: банан;
-beach: пляж;
+apple: сладкое_яблоко, яблоко, яблоня_плод;
+banana: банан, желтый_плод;
+beach: береговая_полоса, пляж;
 desert: безводье, пустыня;
 earth: земля, почва, суша;
 fire: костёр, огонь, пламя;
-flower: цветок;
-forest: лес;
+flower: цветок, цветущая_растительность;
+forest: лес, лесной_массив;
 grass: зелень, трава;
 hill: бугор, холм;
 island: остров, островок;
 lake: водоём, озеро;
-moon: луна;
+moon: луна, спутник_земли
 mountain: вершина, гора;
-ocean: океан;
+ocean: мировой_океан, океан;
 plain: равнина, степь;
-river: река;
+river: водный_поток, река;
 rock: валун, скала;
-sea: море;
-sky: небо;
+sea: море, морская_бездна;
+sky: воздушная_площадь, небо;
 star: звезда, светило;
-sun: солнце;
-tree: дерево;
+sun: солнечный_шар, солнце;
+tree: дерево, древесное_растение, ствол_растения;
 valley: долина, низина;
 water: вода, водичка, жидкость;
 Total: 25 words

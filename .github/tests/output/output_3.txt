@@ -9,13 +9,13 @@ PRINT WORD [word] — print word and translates from dictionary
 SAVE — save dictionary
 CTRL + D on Linux or CTRL + Z on Windows to close dictionary
 programm added
-programm: ПО, программа софт;
+programm: ПО, программа, программное_обеспечение, софт;
 Total: 1 words
 1 translate(s) was deleted
-programm: программа, софт;
+programm: программа, программное_обеспечение, софт;
 Total: 1 words
 Dictionary has been completely cleaned up
 apple added
 1 translate(s) was added to word apple
-apple: яблоко, яблочный;
+apple: плод_яблони, яблоко, яблочный;
 Total: 1 words

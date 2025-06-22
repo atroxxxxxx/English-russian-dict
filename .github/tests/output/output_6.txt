@@ -8,6 +8,7 @@ CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
 SAVE — save dictionary
+CTRL + D on Linux or CTRL + Z on Windows to close dictionary
 HELP — help menu
 ADD WORD [word]: [translate], [translate], [...], [translate]; — add new word
 ADD TRANSLATE [word in dictionary]: [translate], [...], [translate]; — add translate(s) to word
