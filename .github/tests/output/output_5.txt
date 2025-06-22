@@ -6,6 +6,8 @@ REMOVE TRANSLATE [word]: [translate], [...], [translate]; — remove word transl
 CLEAR — clear dictionary
 PRINT DICT — print dictionary
 PRINT WORD [word] — print word and translates from dictionary
+SAVE — save dictionary
+CTRL + D on Linux or CTRL + Z on Windows to close dictionary
 apple added
 apple was removed
 apple added
