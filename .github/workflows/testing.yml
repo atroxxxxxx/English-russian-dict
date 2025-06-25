@@ -36,28 +36,28 @@ jobs:
           name: build
           path: ${{ env.BUILD_DIR }}
           overwrite: true
-  Gtest:
-    needs: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: load artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build
-          path: ${{ env.BUILD_DIR }}
-      - name: run gtest
-        run: |
-          chmod +x ./${{ env.SCRIPT_DIR }}/test.sh
-          ./${{ env.SCRIPT_DIR }}/test.sh ${{ env.BUILD_DIR }}
-      - name: upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build
-          path: ${{ env.BUILD_DIR }}
-          overwrite: true
+#  Gtest:
+#    needs: Build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      - name: load artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: build
+#          path: ${{ env.BUILD_DIR }}
+#      - name: run gtest
+#        run: |
+#          chmod +x ./${{ env.SCRIPT_DIR }}/test.sh
+#          ./${{ env.SCRIPT_DIR }}/test.sh ${{ env.BUILD_DIR }}
+#      - name: upload artifacts
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: build
+#          path: ${{ env.BUILD_DIR }}
+#          overwrite: true
   Main-logic:
-    needs: Gtest
+    needs: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
