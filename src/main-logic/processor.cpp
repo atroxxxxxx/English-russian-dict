@@ -4,7 +4,13 @@
 #include <numeric>
 #include <limits>
 #include <locale>
+#include <regex>
 #include "parser.hpp"
+
+namespace src
+{
+	static const std::wregex pattern(L"^[A-Za-z_]+$");
+}
 
 bool src::MainProcessor::init(Context& context, int argc, char** argv)
 {
@@ -80,7 +86,7 @@ bool src::AddProcessor::add_word(Context& context)
 		return false;
 	}
 	word.pop_back();
-	if (!parse_en_string(word))
+	if (!std::regex_match(word, pattern))
 	{
 		return false;
 	}
@@ -102,7 +108,7 @@ bool src::AddProcessor::add_translate(Context& context)
 		return false;
 	}
 	word.pop_back();
-	if (!parse_en_string(word))
+	if (!std::regex_match(word, pattern))
 	{
 		return false;
 	}
@@ -133,7 +139,7 @@ bool src::RemoveProcessor::remove_word(Context& context)
 {
 	std::wstring word;
 	context.input >> word;
-	if (!parse_en_string(word))
+	if (!std::regex_match(word, pattern))
 	{
 		return false;
 	}
@@ -158,7 +164,7 @@ bool src::RemoveProcessor::remove_translate(Context& context)
 	}
 	word.pop_back();
 	Translates translates;
-	if (!parse_en_string(word) || !(context.input >> translates))
+	if (!std::regex_match(word, pattern) || !(context.input >> translates))
 	{
 		return false;
 	}
@@ -205,7 +211,7 @@ bool src::PrintProcessor::print_word(Context& context)
 		return true;
 	}
 	std::wstring word;
-	if (!(context.input >> word) || !parse_en_string(word))
+	if (!(context.input >> word) || !std::regex_match(word, pattern))
 	{
 		return false;
 	}

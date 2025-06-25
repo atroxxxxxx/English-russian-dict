@@ -10,7 +10,7 @@ namespace src
 {
 	struct MainProcessor
 	{
-		bool init(Context& context, int argc, char** argv);
+		static bool init(Context& context, int argc, char** argv);
 		bool help(Context& context);
 		bool add(Context& context);
 		bool remove(Context& context);

@@ -1,8 +1,10 @@
 #include "../dict.hpp"
 #include <iostream>
+#include <regex>
 
 std::wistream& src::operator>>(std::wistream& in, Dictionary& dictionary)
 {
+	static const std::wregex pattern(L"^[A-Za-z_]+$");
 	std::wistream::sentry sentry(in);
 	if (!sentry)
 	{
@@ -16,7 +18,7 @@ std::wistream& src::operator>>(std::wistream& in, Dictionary& dictionary)
 	}
 	word.pop_back();
 	Translates translates;
-	if ((word.front() == L'_') || (word.back() == L'_') || !parse_en_string(word) || !(in >> translates))
+	if ((word.front() == L'_') || (word.back() == L'_') || !std::regex_match(word, pattern) || !(in >> translates))
 	{
 		in.setstate(std::ios::failbit);
 		return in;
@@ -24,7 +26,6 @@ std::wistream& src::operator>>(std::wistream& in, Dictionary& dictionary)
 	dictionary.dictionary[word] = std::move(translates);
 	return in;
 }
-
 std::wostream& src::operator<<(std::wostream& out, const src::Dictionary& dictionary)
 {
 	for (auto i: dictionary.dictionary)
@@ -34,20 +35,9 @@ std::wostream& src::operator<<(std::wostream& out, const src::Dictionary& dictio
 	return out;
 }
 
-bool src::parse_en_string(std::wstring word)
-{
-	for (auto i: word)
-	{
-		if (!(((L'A' <= i) && (i <= L'Z')) || ((L'a' <= i) && (i <= L'z')) || (i == L'_')))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
 std::wistream& src::operator>>(std::wistream& in, Translates& translates)
 {
+	static const std::wregex pattern(L"^[А-ЯЁа-яё_]+$");
 	std::wistream::sentry sentry(in);
 	if (!sentry)
 	{
@@ -60,7 +50,6 @@ std::wistream& src::operator>>(std::wistream& in, Translates& translates)
 	{
 		if (!(in >> translate))
 		{
-			in.setstate(std::ios::failbit);
 			break;
 		}
 		separator = translate.back();
@@ -70,12 +59,12 @@ std::wistream& src::operator>>(std::wistream& in, Translates& translates)
 			break;
 		}
 		translate.pop_back();
-		if (translate.front() == L'_' || translate.back() == L'_' || !parse_ru_string(translate))
+		if (translate.front() == L'_' || translate.back() == L'_' || !std::regex_match(translate, pattern))
 		{
 			continue;
 		}
 		translates.translates.insert(translate);
-		count++;
+		++count;
 	}
 	if (count == 0)
 	{
@@ -83,19 +72,6 @@ std::wistream& src::operator>>(std::wistream& in, Translates& translates)
 	}
 	return in;
 }
-
-bool src::parse_ru_string(std::wstring word)
-{
-	for (auto i: word)
-	{
-		if (!(((L'А' <= i) && (i <= L'Я')) || ((L'а' <= i) && (i <= L'я')) || (L'Ё' == i) || (L'ё' == i) || L'_' == i))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
 std::wostream& src::operator<<(std::wostream& out, const src::Translates& translates)
 {
 	size_t count = 1;

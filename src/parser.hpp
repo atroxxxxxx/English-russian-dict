@@ -4,9 +4,8 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include <map>
 
-#include "map.hpp"
-#include "set.hpp"
 #include "dict.hpp"
 
 namespace src
@@ -26,7 +25,7 @@ namespace src
 	public:
 		using processor = Processor;
 		using call_signature = bool(processor::*)(Context&);
-		using map_type = src::Map< std::wstring, call_signature >;
+		using map_type = std::map< std::wstring, call_signature >;
 
 		Context context;
 
