@@ -1,5 +1,6 @@
 #include "processor.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <numeric>
 #include <limits>
@@ -51,7 +52,7 @@ bool src::MainProcessor::help(Context& context)
 }
 bool src::MainProcessor::add(Context& context)
 {
-	static Parser< AddProcessor >::map_type comands = {
+	static const Parser< AddProcessor >::map_type comands = {
 		{L"TRANSLATE", &AddProcessor::add_translate},
 		{L"WORD", &AddProcessor::add_word},
 	};
@@ -60,7 +61,7 @@ bool src::MainProcessor::add(Context& context)
 }
 bool src::MainProcessor::remove(Context& context)
 {
-	static Parser< RemoveProcessor >::map_type comands = {
+	static const Parser< RemoveProcessor >::map_type comands = {
 		{L"TRANSLATE", &RemoveProcessor::remove_translate},
 		{L"WORD", &RemoveProcessor::remove_word},
 	};
@@ -69,7 +70,7 @@ bool src::MainProcessor::remove(Context& context)
 }
 bool src::MainProcessor::print(Context& context)
 {
-	static Parser< PrintProcessor >::map_type comands = {
+	static const Parser< PrintProcessor >::map_type comands = {
 		{L"WORD", &PrintProcessor::print_word},
 		{L"DICT", &PrintProcessor::print_dict},
 	};
@@ -81,7 +82,7 @@ bool src::AddProcessor::add_word(Context& context)
 {
 	std::wstring word;
 	Translates translates;
-	if (!(context.input >> word >> translates) || word.back() != ':')
+	if (!(context.input >> word >> translates) || word.back() != L':' || !context.eol())
 	{
 		return false;
 	}
@@ -103,7 +104,7 @@ bool src::AddProcessor::add_word(Context& context)
 bool src::AddProcessor::add_translate(Context& context)
 {
 	std::wstring word;
-	if (!(context.input >> word) || word.back() != ':')
+	if (!(context.input >> word) || word.back() != L':')
 	{
 		return false;
 	}
@@ -116,10 +117,10 @@ bool src::AddProcessor::add_translate(Context& context)
 	if (it != context.dict.dictionary.end())
 	{
 		size_t sizeBefore = it->second.translates.size();
-		if (context.input >> it->second)
+		if ((context.input >> it->second) && context.eol())
 		{
 			context.output << (it->second.translates.size() - sizeBefore)
-					<< L" translate(s) was added to word " << word << '\n';
+					<< L" translate(s) was added to word " << word << L'\n';
 		}
 		else
 		{
@@ -139,7 +140,7 @@ bool src::RemoveProcessor::remove_word(Context& context)
 {
 	std::wstring word;
 	context.input >> word;
-	if (!std::regex_match(word, pattern))
+	if (!context.eol() || !std::regex_match(word, pattern))
 	{
 		return false;
 	}
@@ -158,13 +159,13 @@ bool src::RemoveProcessor::remove_word(Context& context)
 bool src::RemoveProcessor::remove_translate(Context& context)
 {
 	std::wstring word;
-	if (!(context.input >> word) || word.back() != ':')
+	if (!(context.input >> word) || word.back() != L':')
 	{
 		return false;
 	}
 	word.pop_back();
 	Translates translates;
-	if (!std::regex_match(word, pattern) || !(context.input >> translates))
+	if (!std::regex_match(word, pattern) || !(context.input >> translates) || !context.eol())
 	{
 		return false;
 	}
@@ -174,11 +175,10 @@ bool src::RemoveProcessor::remove_translate(Context& context)
 		context.error << word << L" wasn't found\n";
 		return true;
 	}
-	size_t sizeBefore = it->second.translates.size();
-	for (auto i: translates.translates)
-	{
-		it->second.translates.erase(i);
-	}
+	const size_t sizeBefore = it->second.translates.size();
+	std::for_each(translates.translates.begin(), translates.translates.end(), [&it](const auto& key) {
+		it->second.translates.erase(key);
+	});
 	if (it->second.translates.empty())
 	{
 		context.output << L"0 translates to word " << word << ". This word will be delete from dictionary\n";
@@ -193,13 +193,17 @@ bool src::RemoveProcessor::remove_translate(Context& context)
 
 bool src::PrintProcessor::print_dict(Context& context)
 {
+	if (!context.eol())
+	{
+		return false;
+	}
 	if (context.dict.dictionary.empty())
 	{
 		context.error << L"Dictionary is empty\n";
 		return true;
 	}
 	context.output << context.dict;
-	context.output << L"Total: " << context.dict.dictionary.size() << " words\n";
+	context.output << L"Total: " << context.dict.dictionary.size() << L" words\n";
 	return true;
 }
 bool src::PrintProcessor::print_word(Context& context)
@@ -211,7 +215,7 @@ bool src::PrintProcessor::print_word(Context& context)
 		return true;
 	}
 	std::wstring word;
-	if (!(context.input >> word) || !std::regex_match(word, pattern))
+	if (!(context.input >> word) || !std::regex_match(word, pattern) || !context.eol())
 	{
 		return false;
 	}
@@ -229,6 +233,10 @@ bool src::PrintProcessor::print_word(Context& context)
 
 bool src::MainProcessor::clear(Context& context)
 {
+	if (!context.eol())
+	{
+		return false;
+	}
 	if (context.dict.dictionary.empty())
 	{
 		context.error << L"Dictionary is already empty\n";
@@ -243,6 +251,10 @@ bool src::MainProcessor::clear(Context& context)
 
 bool src::MainProcessor::save(Context& context)
 {
+	if (!context.eol())
+	{
+		return false;
+	}
 	if (context.dict.dictionary.empty())
 	{
 		context.error << L"Dictionary is empty, nothing to save\n";

@@ -45,8 +45,8 @@ std::wistream& src::operator>>(std::wistream& in, Translates& translates)
 	}
 	std::wstring translate;
 	size_t count = 0;
-	char separator = '\0';
-	while (separator != ';')
+	wchar_t separator = L'\0';
+	while (separator != L';')
 	{
 		if (!(in >> translate))
 		{
@@ -59,12 +59,11 @@ std::wistream& src::operator>>(std::wistream& in, Translates& translates)
 			break;
 		}
 		translate.pop_back();
-		if (translate.front() == L'_' || translate.back() == L'_' || !std::regex_match(translate, pattern))
+		if ((translate.front() != L'_') && (translate.back() != L'_') && std::regex_match(translate, pattern))
 		{
-			continue;
+			translates.translates.insert(translate);
+			++count;
 		}
-		translates.translates.insert(translate);
-		++count;
 	}
 	if (count == 0)
 	{
