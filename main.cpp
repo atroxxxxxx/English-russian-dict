@@ -2,13 +2,26 @@
 #include <string>
 #include <iterator>
 #include <locale>
+#include <algorithm>
+#include <functional>
 
 #include "src/parser.hpp"
 #include "src/processor.hpp"
 #include "src/dict.hpp"
 
+// const auto lambda = [](int a) { return a % 2 == 0;};
+
+//using namespace std::placeholders;
+//
+//static auto mod = std::bind(std::modulus<>(), _1, 2);
+//static auto cond = std::bind(std::equal_to<>(), std::bind(mod, _1), 0);
+
 int main(int argc, char** argv)
 {
+//	std::cout << (2 % 2 == 0) << '\n';
+//	std::cout << cond(2) << '\n';
+//
+//	return 0;
 	std::setlocale(LC_ALL, "en_US.UTF-8");
 	src::Dictionary dict;
 	src::MainProcessor processor;

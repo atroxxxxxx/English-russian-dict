@@ -19,6 +19,7 @@ namespace src
 		dict_type& dict;
 		bool eol();
 	};
+
 	template< class Processor >
 	class Parser
 	{
